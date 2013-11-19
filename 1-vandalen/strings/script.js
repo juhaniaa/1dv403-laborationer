@@ -4,9 +4,7 @@
 
 window.onload = function () {
 
-	// I denna funktion ska du skriva koden för att hantera "spelet"
 	var convertString = function (str) {
-		// Plats för förändring.		
         
         var strLength = str.length,
             j,
@@ -31,14 +29,9 @@ window.onload = function () {
             } else if (strArray[j] === strArray[j].toLowerCase()) { // omvandlar LowerCase-bokstäver till UpperCase
                 
                 strArray[j] = strArray[j].toUpperCase();
-
             }
         }
-        
         return strArray.join(""); // returnerar en sträng utav arrayen
-        
-
-
 	};
 	// ------------------------------------------------------------------------------
 
