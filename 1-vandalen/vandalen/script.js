@@ -22,9 +22,8 @@ var makePerson = function (persArr) {
                 throw new Error("Namnet på plats " + index + " i objektet är fel format");
             }
 
-            if (!isNaN(element.age) && element.age !== isNaN) { // om age inte är isNaN
-                
-                ages.push(element.age); // objectets ålder läggs till i arrayen ages    
+            if ((!isNaN(element.age) && element.age !== isNaN && element.age > 0) && (Math.floor(element.age) === Math.ceil(element.age))) { // om age inte är isNaN
+                ages.push(element.age); // objectets ålder läggs till i arrayen ages            
                 
             } else {
                 console.log(element.age + " är inte en giltig ålder");
@@ -52,7 +51,7 @@ var makePerson = function (persArr) {
     
     return result;
 };
-var data = [{name: "John Hägerudd", age: 56}, {name: "Johan Leitet", age: 36}, {name: "Mats Loock", age: 46}];
+var data = [{name: "John Hägerudd", age: 36}, {name: "Johan Leitet", age: 36}, {name: "Mats Loock", age: 46}];
 
 makePerson(data);
 
