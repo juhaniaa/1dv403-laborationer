@@ -1,0 +1,55 @@
+body
+{
+    font-family: 'Quintessential', Cursive;
+}
+
+#app
+{
+    width:400px;
+    background-color:#555555;
+}
+
+#header
+{
+    font-weight:bold;
+    font-size: 2em;
+    line-height: 2em;
+    text-align:center;
+    }
+
+p{
+    background-color:white;
+    margin-left:4%;
+    width:85%;
+    padding:10px;
+}
+
+#textfield{
+    display:block;
+    background-color:white;
+    text-align:center;
+    margin-left:4%;
+    width:90%;
+    margin-top:10px;
+    margin-bottom:10px;
+    overflow: hidden;
+}
+
+textarea
+{
+    width:90%;
+    resize:none;
+    }
+
+button
+{
+    border-radius:15px;
+    margin-top:5px;
+    float:right;
+    margin:3px;
+    }
+
+#bot{
+    height:1px;
+    display:block;
+}
