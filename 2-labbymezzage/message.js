@@ -23,6 +23,7 @@ Message.prototype.toString = function () {
     return this.getText() + " (" + this.getDate() + ")";
 };
 
+// returnerar meddelandets innehåll i html format med <br/>
 Message.prototype.getHTMLText = function () {
     return (this.getText().replace(/\n/g, "<br/>"));
 };
