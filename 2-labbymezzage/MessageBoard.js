@@ -66,7 +66,6 @@ function MessageBoard(boardId) {
     theButton.value = "Skicka";
     theButton.className = "button";
     theButton.onclick = function (e) {
-        console.log(that);
         that.writeMessage();
         return false;
     };
@@ -81,102 +80,103 @@ function MessageBoard(boardId) {
     boardDiv.appendChild(botDiv);
 
     
-    var messages = [];
-        
-}
-        
-        
+    this.messages = [];
     
-MessageBoard.prototype.writeMessage = function () {
-
-    // om fältet är tomt ska meddelanden inte "skickas"
-    if (this.document.getElementById("textfield").getElementsByTagName("textarea")[0].value == 0) {
-        return false;
-    }
-
-    var message = document.getElementById("textfield").getElementsByTagName("textarea")[0].value;
-
-    // skapar ett nytt message object med texten och tiden och
-    // lägger till den i arrayen för meddelanden
-    MessageBoard.messages.push(new Message(message, new Date()));
-    document.getElementById("textfield").getElementsByTagName("textarea")[0].value = "";
-
-    // anropar renderMessages för att skriva ut alla meddelanden
-    MessageBoard.renderMessages();
-
-    return false;
-};
-
-function renderMessage(theMessage, messageID) {
-    var text = document.createElement("p"),
-        div = document.getElementById("messageArea");
-    text.innerHTML = MessageBoard.messages[messageID].getHTMLText();
-    div.appendChild(text);
-    
-    // skapa span tag fyll den med meddelandets skapelse tid och lägg till i slutet av meddelandet
-    var messageTime = document.createElement("span");
-    messageTime.innerHTML = MessageBoard.messages[messageID].getDateText();
-    text.appendChild(messageTime);
-    
-    // uppdatera meddelande räknaren
-    MessageBoard.messageCount();
-    
-    // skapa en länk för att radera ett meddelande
-    var aClose = document.createElement("a");
-    aClose.href = "#";
-    aClose.alt = "Close Message";
-    aClose.className = "aClose";
-    text.insertBefore(aClose, text.firstChild);
-    
-    aClose.onclick = function () {
-
-        if (window.confirm("Vill du verkligen radera meddelandet?")) {
-            MessageBoard.removeMessage(messageID);
+    this.writeMessage = function () {
+        // om fältet är tomt ska meddelanden inte "skickas"
+        if (document.querySelector("#" + boardId + " textarea").value == 0) {
+            return false;
         }
+    
+        var message = document.querySelector("#" + boardId + " textarea").value;
+    
+        // skapar ett nytt message object med texten och tiden och
+        // lägger till den i arrayen för meddelanden
+        this.messages.push(new Message(message, new Date()));
+        
+        // rensar textboxen
+        document.querySelector("#" + boardId + " textarea").value = "";
+    
+        // anropar renderMessages för att skriva ut alla meddelanden
+        this.renderMessages();
+    
         return false;
     };
     
-    // skapa en länk för att se tidsstämpel för meddelandet
-    var aTime = document.createElement("a");
-    aTime.href = "#";
-    aTime.alt = "Message creation time";
-    aTime.className = "aTime";
-    text.insertBefore(aTime, aClose);
+    this.renderMessage = function (theMessage, messageID) {
+        var text = document.createElement("p"),
+            div = document.querySelector("#" + boardId + " .messageArea");
+        text.innerHTML = that.messages[messageID].getHTMLText();
+        div.appendChild(text);
+        
+        // skapa span tag fyll den med meddelandets skapelse tid och lägg till i slutet av meddelandet
+        var messageTime = document.createElement("span");
+        messageTime.innerHTML = that.messages[messageID].getDateText();
+        text.appendChild(messageTime);
+        
+        // uppdatera meddelande räknaren
+        that.messageCount();
+        
+        // skapa en länk för att radera ett meddelande
+        var aClose = document.createElement("a");
+        aClose.href = "#";
+        aClose.alt = "Close Message";
+        aClose.className = "aClose";
+        text.insertBefore(aClose, text.firstChild);
+        
+        aClose.onclick = function () {
     
-    aTime.onclick = function () {
-        alert("Inlägget skapades den " + MessageBoard.messages[messageID].getAlertText() + " klockan " + MessageBoard.messages[messageID].getDateText());
-        return false;
+            if (window.confirm("Vill du verkligen radera meddelandet?")) {
+                that.removeMessage(messageID);
+            }
+            return false;
+        };
+    
+        // skapa en länk för att se tidsstämpel för meddelandet
+        var aTime = document.createElement("a");
+        aTime.href = "#";
+        aTime.alt = "Message creation time";
+        aTime.className = "aTime";
+        text.insertBefore(aTime, aClose);
+        
+        aTime.onclick = function () {
+            alert("Inlägget skapades den " + that.messages[messageID].getAlertText() + " klockan " + that.messages[messageID].getDateText());
+            return false;
+        };
+
     };
 
-}
-
-function renderMessages() {
-    // radera all meddelanden
-    document.getElementById("messageArea").innerHTML = "";
+    this.renderMessages = function () {
+        // radera all meddelanden
+        document.querySelector("#" + boardId + " .messageArea").innerHTML = "";
+        
+        // anropa renderMessage för varje meddelande i messages arrayen
+        this.messages.forEach(this.renderMessage);
+        
+        // då det inte finns några meddelanden att skrivas ut uppdateras endast antalet meddelanden
+        if (this.messages.length === 0) {
+            this.messageCount();
+        }
+    };
     
-    // anropa renderMessage för varje meddelande i messages arrayen
-    MessageBoard.messages.forEach(MessageBoard.renderMessage);
+    // uppdaterar antalet meddelanden
+    this.messageCount = function () {
+        document.querySelector("#" + boardId + " .textfield" + " span").innerHTML = "Antal meddelanden: " + this.messages.length;
+    };
     
-    // då det inte finns några meddelanden att skrivas ut uppdateras endast antalet meddelanden
-    if (MessageBoard.messages.length === 0) {
-        MessageBoard.messageCount();
-    }
+    // raderar ett meddelandet
+    this.removeMessage = function (messID) {
+        this.messages.splice(messID, 1);
+        this.renderMessages();
+    };
+            
 }
-
-// uppdaterar antalet meddelanden
-function messageCount() {
-    document.getElementById("textfield").getElementsByTagName("span")[0].innerHTML = "Antal meddelanden: " + MessageBoard.messages.length;
-}
-
-// raderar ett meddelandet
-function removeMessage(messID) {
-    MessageBoard.messages.splice(messID, 1);
-    MessageBoard.renderMessages();
-}
-
-
 
 window.onload = function () {
     new MessageBoard("board1");
     new MessageBoard("board2");
+    new MessageBoard("board3");
+    new MessageBoard("board4");
+    new MessageBoard("board5");
+    new MessageBoard("board6");
 };
