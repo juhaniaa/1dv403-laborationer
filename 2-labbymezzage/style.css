@@ -22,7 +22,35 @@ p{
     margin-left:4%;
     width:85%;
     padding:10px;
+    padding-bottom:20px;
 }
+
+.aClose, .aTime
+{
+    width:15px;
+    height:15px;
+    display:block;
+    float:right;
+    margin: 3px;
+    background-size:contain;
+    }
+
+.aClose
+{
+    background-image:url(delete.png);
+
+    }
+
+.aTime
+{
+    background-image:url(time.png);
+}
+
+#messageArea span
+{
+    clear:both;
+    float:right;
+    }
 
 #textfield{
     display:block;
