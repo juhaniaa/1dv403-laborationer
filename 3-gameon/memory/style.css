@@ -1,4 +1,41 @@
-td{
+td a{
     width:24px;
     height:24px;
+    display:block;
+}
+
+.zero{
+    background-image:url(pics/0.png);
+}
+
+.one{
+    background-image:url(pics/1.png);
+}
+
+.two{
+    background-image:url(pics/2.png);
+}
+
+.three{
+    background-image:url(pics/3.png);
+}
+
+.four{
+    background-image:url(pics/4.png);
+}
+
+.five{
+    background-image:url(pics/5.png);
+}
+
+.six{
+    background-image:url(pics/6.png);
+}
+
+.seven{
+    background-image:url(pics/7.png);
+}
+
+.eight{
+    background-image:url(pics/8.png);
 }
