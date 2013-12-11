@@ -4,6 +4,17 @@ td a{
     display:block;
 }
 
+body table{
+    border:1px solid black;
+    padding:10px;
+    margin:3px;
+    float:left;
+}
+
+body p{
+
+}
+
 .zero{
     background-image:url(pics/0.png);
 }

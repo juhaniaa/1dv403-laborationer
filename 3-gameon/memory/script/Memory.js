@@ -6,6 +6,9 @@ function Memory(rows, cols, gameId) {
     var last = 0;
     var lastIndex = 0;
     var lastRef = 0;
+    var ready = true;
+    var count = 0;
+    var tries = 0;
     
     // skapa en div tag med gameId för spelbrädan
     var div = document.createElement("div");
@@ -23,40 +26,61 @@ function Memory(rows, cols, gameId) {
     function createTable(element, index, array) {
         // vänder den bild som användaren tryckt på
         function turnPic() {
-            // endast två bilder skall kunna vändas samtidigt och en timer skall vända tillbaka de bilder som är uppvända
             
-            // om bilden inte är rättsvängd
-            if (this.mayTurn == true) {
+            function increaseTries() {
+                tries += 1;
+            }
+            // endast två bilder skall kunna vändas samtidigt och en timer skall vända tillbaka de bilder som är uppvända
+            // om bilden inte redan är rättsvängd och sväng tillbaka-timern är klar
+            if (this.mayTurn == true && ready == true) {
         
-                // sväng på den
+                // sväng på den klickade bilden
                 this.className = cssPosition[element];
                 this.mayTurn = false;
 
-                // om bilden inte har samma värde som den förra bilden och det inte är den första bilden...
+                // om bilden inte har samma värde som den förra bilden och det inte är den första bilden som vänds...
                 if (element != last && last != 0) {
+                    
                     //sväng tillbaka bilderna
-                    this.className = cssPosition[0];
-                    lastRef.className = cssPosition[0];
-                    this.mayTurn = true;
-                    lastRef.mayTurn = true;
-                    last = 0;
+                    ready = false;
+                    var that = this;
+                    setTimeout(function () {
                     
-                } else if(element == last) {
-                    last = 0;
+                        that.className = cssPosition[0];
+                        lastRef.className = cssPosition[0];
+                        that.mayTurn = true;
+                        lastRef.mayTurn = true;
+                        last = 0;
+                        ready = true;
+                        increaseTries();
+                    }, 1000);
                     
-                // annars spara värdet på den svängda bilden
+                    // Om det är ett par, räkna upp räknaren
+                } else if (element == last) {
+                    count += 1;
+                    last = 0;
+                    increaseTries();
+                    
+                // annars är det den första bilden som vänds, spara värdet på den svängda bilden
                 } else {
                     last = element;
                     lastIndex = index;
                     lastRef = this;
+                    increaseTries();
                 }
             }
-            
+            if ((count * 2) >= array.length) {
+                var p = document.createElement("tr");
+                p.innerHTML = "Du vann på " + tries/2 + " försök!";
+                div.appendChild(p);
+                
+                
+            }
             return false;
         }
         
-        //då index + 1 % 3 == 0 skapas en ny tr som läggs till i table
-        if (index % 3 == 0) {
+        //då index % cols == 0 skapas en ny tr som läggs till i table
+        if (index % cols == 0) {
             table.appendChild(document.createElement("tr"));
         }
         
@@ -71,11 +95,7 @@ function Memory(rows, cols, gameId) {
         a.onclick = turnPic;
         td.appendChild(a);
         table.lastChild.appendChild(td);
-        
-        
     }
     rndArray.forEach(createTable);
-    
-
 }
 
