@@ -6,4 +6,9 @@ input, label, select {
 
 .notCorrect{
     color:red;
+    border-color:red;
+}
+
+.normal{
+    border-color:default;
 }
