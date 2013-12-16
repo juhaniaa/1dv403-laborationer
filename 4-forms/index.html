@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+        <link rel="stylesheet" href="css/style.css">
+        <meta charset="utf-8" />
+        <title>Validering</title>
+    </head>
+		<body>
+            <form id="payform" action="http://voyager.lnu.se/tekinet/kurser/dtt/wp_webbteknik/process_form.php" method="post">
+                <label for="fornamn">Förnamn:</label>
+                <input type="text" id="fornamn" name="fornamn" placeholder="Förnamn" />
+                <label for="efternamn">Efternamn:</label>
+                <input type="text" id="efternamn" name="efternamn" placeholder="Efternamn" />
+                <label for="postnr">Postnummer:</label>
+                <input type="text" id="postnr" name="postnr" placeholder="Postnummer" />
+                <label for="epost">E-post adress:</label>
+                <input type="text" id="epost" name="epost" placeholder="Epost" />
+                <input class="send" type="submit" value="Skicka!" />
+            </form>
+            <script src="js/validering.js"></script>
+		</body>
+</html>
