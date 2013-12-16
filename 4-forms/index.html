@@ -9,13 +9,19 @@
 		<body>
             <form id="payform" action="http://voyager.lnu.se/tekinet/kurser/dtt/wp_webbteknik/process_form.php" method="post">
                 <label for="fornamn">Förnamn:</label>
-                <input type="text" id="fornamn" name="fornamn" placeholder="Förnamn" />
+                <input type="text" id="fornamn" name="fornamn" placeholder="Förnamn" required/>
                 <label for="efternamn">Efternamn:</label>
-                <input type="text" id="efternamn" name="efternamn" placeholder="Efternamn" />
+                <input type="text" id="efternamn" name="efternamn" placeholder="Efternamn" required/>
                 <label for="postnr">Postnummer:</label>
-                <input type="text" id="postnr" name="postnr" placeholder="Postnummer" />
+                <input type="text" id="postnr" name="postnr" placeholder="Postnummer" required/>
                 <label for="epost">E-post adress:</label>
-                <input type="text" id="epost" name="epost" placeholder="Epost" />
+                <input type="text" id="epost" name="epost" placeholder="Epost" required/>
+                <label for="pris">Prismodell</label>
+                <select id="pris" name="pris">
+                    <option value="lag">Låg</option>
+                    <option value="mellan">Mellan</option>
+                    <option value="hog">Hög</option>
+                </select>
                 <input class="send" type="submit" value="Skicka!" />
             </form>
             <script src="js/validering.js"></script>

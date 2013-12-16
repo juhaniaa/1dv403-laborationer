@@ -1,5 +1,9 @@
-input, label {
+input, label, select {
     clear:both;
     float:left;
     margin-bottom:5px;
+}
+
+.notCorrect{
+    color:red;
 }
