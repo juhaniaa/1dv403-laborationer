@@ -10,5 +10,5 @@ input, label, select {
 }
 
 .normal{
-    border-color:default;
+    border-color:currentColor;
 }

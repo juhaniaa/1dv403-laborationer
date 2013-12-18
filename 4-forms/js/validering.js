@@ -1,9 +1,34 @@
+/*global console, window, document, confirm */
 "use strict";
 var Validator = {
     init: function () {
+        
+        var fnOk = 0,
+            lnOk = 0,
+            pnOk = 0,
+            emOk = 0;
     
         var form = document.getElementById("payform");
+        form.reset();
         
+        // funktion som testar reg-uttryck och skickar tillbaka true eller false beroende på resultatet samt
+        // ändrar class och label text på den givna inputen
+        var testPattern = function (pattern, that, correctText, falseText) {
+            
+            if (!that.value.match(pattern)) {
+                that.previousElementSibling.textContent = falseText;
+                that.previousElementSibling.className = "notCorrect";
+                that.className = "notCorrect";
+                return false;
+            } else {
+                that.previousElementSibling.textContent = correctText;
+                that.previousElementSibling.className = "normal";
+                that.className = "normal";
+                return true;
+            }
+        };
+        
+        // Förnamn
         var firstName = form.elements.fornamn;
         firstName.onfocus = function () {
             this.select();
@@ -11,18 +36,12 @@ var Validator = {
         
         firstName.onchange = function () {
             var fnPattern = /^.+$/;
-            if (!firstName.value.match(fnPattern)) {
-                this.previousElementSibling.textContent = "Förnamn: Får inte vara tomt!";
-                this.previousElementSibling.className = "notCorrect";
-                this.className = "notCorrect";
-                return false;
-            } else {
-                this.previousElementSibling.textContent = "Förnamn:";
-                this.previousElementSibling.className = "normal";
-                this.className = "normal";
-            }
+            if (testPattern(fnPattern, this, "Förnamn:", "Förnamn: får inte vara tomt!")) {
+                fnOk = 1;
+            } else { fnOk = 0; }
         };
         
+        // Efternamn
         var lastName = form.elements.efternamn;
         lastName.onfocus = function () {
             this.select();
@@ -30,61 +49,48 @@ var Validator = {
         
         lastName.onchange = function () {
             var lnPattern = /^.+$/;
-            if (!lastName.value.match(lnPattern)) {
-                this.previousElementSibling.textContent = "Efternamn: Får inte vara tomt!";
-                this.previousElementSibling.className = "notCorrect";
-                this.className = "notCorrect";
-                return false;
-            } else {
-                this.previousElementSibling.textContent = "Efternamn:";
-                this.previousElementSibling.className = "normal";
-                this.className = "normal";
-            }
+            if (testPattern(lnPattern, this, "Efternamn:", "Efternamn: får inte vara tomt!")) {
+                lnOk = 1;
+            } else { lnOk = 0; }
         };
         
+        // Postnummer
         var postNr = form.elements.postnr;
         postNr.onfocus = function () {
             this.select();
         };
         postNr.onchange = function () {
             var postPattern = /^(SE)?\s?\d{3}(\s|-)?\d{2}$/;
-            if (!postNr.value.match(postPattern)) {
-                this.previousElementSibling.textContent = "Postnummer: Bör vara i 'XXXXX' format!";
-                this.previousElementSibling.className = "notCorrect";
-                this.className = "notCorrect";
-                return false;
-            } else {
+            if (testPattern(postPattern, this, "Postnummer:", "Postnummer: bör vara i XXXXX format, tex 12345")) {
                 this.value = this.value.replace(/(SE)?-?\s?/g, "");
-                this.previousElementSibling.textContent = "Postnummer:";
-                this.previousElementSibling.className = "normal";
-                this.className = "normal";
-            }
-        
+                pnOk = 1;
+            } else { pnOk = 0; }
         };
         
+        // E-post adress
         var email = form.elements.epost;
         email.onfocus = function () {
             this.select();
         };
         email.onchange = function () {
-            var emailPattern = /^(?!\.)(\w|-|\.){1,64}(?!\.)@(?!\.)[-.a-zåäö0-9]{4,253}$/;
-            if(!email.value.match(emailPattern)){
-                this.previousElementSibling.textContent = "E-post adress: Bör vara i korrekt format!";
-                this.previousElementSibling.className = "notCorrect";
-                this.className = "notCorrect";
-                return false;
-            } else {
-                this.previousElementSibling.textContent = "E-post adress:";
-                this.previousElementSibling.className = "normal";
-                this.className = "normal";
-            }
+            var emailPattern = /^(?!\.)(\w|-|\.){1,64}(?!\.)@(?!\.)[\-.a-zåäö0-9]{4,253}$/;
+            if (testPattern(emailPattern, this, "E-post adress:", "E-post adress: måste vara i korrekt format")) {
+                emOk = 1;
+            } else { emOk = 0; }
+        };
+        
+        // Skicka knappen
+        form.onsubmit = function () {
+            if (fnOk * lnOk * pnOk * emOk) {
+                
+                var confirmText = "Vänligen bekräfta ditt köp\n\n" + firstName.previousElementSibling.innerHTML + " " + firstName.value + "\n" + lastName.previousElementSibling.innerHTML + " " + lastName.value + "\n" + postNr.previousElementSibling.innerHTML + " " + postNr.value + "\n" + email.previousElementSibling.innerHTML + " " + email.value;
+                
+                if (!confirm(confirmText)) {
+                    return false;
+                }
+            } else { return false; }
         };
     }
 };
 
 window.onload = Validator.init;
-
-// onsubmit = function(e) {
-// gör validering av datat
-// if (!ok){return false;}
-//}
