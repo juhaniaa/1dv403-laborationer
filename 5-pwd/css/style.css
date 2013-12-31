@@ -14,3 +14,59 @@
     color:white;
     background-color:rgba(255,255,255,0.15);
 }
+
+.iVicon{
+    height:40px;
+    width:40px;
+    display:block;
+    background-image:url(../pics/imageView.gif);
+    margin:5px;
+}
+
+/* START Window style */
+.winDiv{
+    height:350px;
+    width:250px;
+    margin:5px 0 0 5px;
+    position:absolute;
+    border:3px solid rgb(100,100,100);
+}
+
+.headDiv{
+    height:9%;
+    width:100%;
+    color:white;
+    background-color:black;
+    text-align:center;
+    
+}
+
+.headDiv span{
+    margin:5px;
+    height:20px;
+    width:20px;
+    display:block;
+    float:left;
+    background-image:url(../pics/imageViewMini.gif);
+}
+
+.headDiv .aClose{
+    margin:5px;
+    height:15px;
+    width:15px;
+    background-color:white;
+    float:right;
+    display:block;
+}
+
+.contentDiv{
+    height:84%;
+    width:100%;
+    background-color:rgb(230,230,230);
+}
+.statusDiv{
+    height:7%;
+    width:100%;
+    background-color:black;
+}
+/* END Window style */
