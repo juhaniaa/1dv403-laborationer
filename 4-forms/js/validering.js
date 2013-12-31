@@ -81,8 +81,9 @@ var Validator = {
         
         // Skicka knappen
         form.onsubmit = function () {
+            // Kontrollerar att alla poster är ok att skicka
             if (fnOk * lnOk * pnOk * emOk) {
-                
+                // Utskrift av Labels och värden i confirm
                 var confirmText = "Vänligen bekräfta ditt köp\n\n" + firstName.previousElementSibling.innerHTML + " " + firstName.value + "\n" + lastName.previousElementSibling.innerHTML + " " + lastName.value + "\n" + postNr.previousElementSibling.innerHTML + " " + postNr.value + "\n" + email.previousElementSibling.innerHTML + " " + email.value;
                 
                 if (!confirm(confirmText)) {
