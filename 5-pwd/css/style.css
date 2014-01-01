@@ -26,7 +26,7 @@
 /* START Window style */
 .winDiv{
     height:350px;
-    width:250px;
+    width:255px;
     margin:5px 0 0 5px;
     position:absolute;
     border:3px solid rgb(100,100,100);
@@ -54,7 +54,7 @@
     margin:5px;
     height:15px;
     width:15px;
-    background-color:white;
+    background-image:url(../pics/x.png);
     float:right;
     display:block;
 }
@@ -69,4 +69,10 @@
     width:100%;
     background-color:black;
 }
+
+.picDiv{
+    margin:5px;
+    float:left;
+}
+
 /* END Window style */
