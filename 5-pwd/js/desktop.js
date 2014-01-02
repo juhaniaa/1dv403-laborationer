@@ -16,6 +16,7 @@ function Window() {
     aClose.href = "#";
     aClose.onclick = function () {
         desk.removeChild(winDiv);
+        return false;
     };
     headDiv.appendChild(aClose);
     var contentDiv = document.createElement("div");
@@ -31,14 +32,14 @@ function Window() {
 
 /* Anropas då iVicon klickas */
 /* Gör ett ajax anrop och får en sträng med alla bilder */
-function imageViewer(myContent) {
+function imageViewer(myContent, myStatus) {
     var maxWidth = 0;
     var maxHeight = 0;
     
     /* Skapar div taggar med img taggar inuti och lägger till i contentDiv */
     function createImage(element, index, array) {
         
-        
+        /* Lägger till ny css rule med max höjd och bredd för bild divarna */
         function changeCss(ruleName) {
                 var i;
                 for (i = 0; i < document.styleSheets[0].cssRules.length; i += 1) {
@@ -49,11 +50,22 @@ function imageViewer(myContent) {
                     }
                 }
             }
+        
         var box = document.createElement("div");
         box.className = "picDiv";
         var pic = document.createElement("img");
         pic.setAttribute("src", element.thumbURL);
-        box.appendChild(pic);
+        var aTag = document.createElement("a");
+        aTag.href = "#";
+        
+        /* Då bilden klickas ändras bakgrunden */
+        aTag.onclick = function () {
+            var bgUrl = element.URL;
+            document.styleSheets[0].insertRule("#desk { background-image:url("+bgUrl+");}",document.styleSheets[0].cssRules.length);
+            return false;
+        }
+        aTag.appendChild(pic)
+        box.appendChild(aTag);
         myContent.appendChild(box);
         
         if (element.thumbWidth > maxWidth) {
@@ -66,23 +78,7 @@ function imageViewer(myContent) {
         
         if (index + 1 === array.length) {
             
-            changeCss(".picDiv");
-            
-            /*console.log(maxWidth);
-            console.log(maxHeight);
-            
-            console.log(myContent.getElementsByClassName("picDiv"));
-            console.log(document.styleSheets[0].cssRules);*/
-            
-            
-            
-            
-            
-            /*myContent.getElementsByClassName("picDiv").style.width = maxWidth;
-            myContent.getElementsByClassName("picDiv").style.height = maxHeight;*/
-            
-
-            
+            changeCss(".picDiv");        
         }
     }
     
@@ -90,6 +86,8 @@ function imageViewer(myContent) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
+            myStatus.className = "statusDiv";
+            myStatus.innerHTML = "";
             if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
                 var picArray = JSON.parse(xhr.responseText);
                 
@@ -113,13 +111,13 @@ var DesktopApp = {
         menu.appendChild(iVicon);
         iVicon.onclick = function () {
             var myContent = new Window();
-            imageViewer(myContent);
+            var myStatus = myContent.parentElement.lastChild;
+            myStatus.className = "loading";
+            myStatus.innerHTML = "loading";
+            imageViewer(myContent, myStatus);
             return false;
         };
-
     }
 };
-
-
 
 window.onload = DesktopApp.init;
