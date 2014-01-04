@@ -21,7 +21,7 @@ function Window(headText, type) {
     };
     headDiv.appendChild(aClose);
     var contentDiv = document.createElement("div");
-    contentDiv.className = "contentDiv";
+    contentDiv.className = type+"ContentDiv";
     var statusDiv = document.createElement("div");
     statusDiv.className = "statusDiv";
     statusDiv.innerHTML = "loading";
@@ -146,7 +146,7 @@ var DesktopApp = {
         rssIcon.className = "rssIcon";
         menu.appendChild(rssIcon);
         rssIcon.onclick = function () {
-            var myRssContent = new Window("RSS Reader", "RSS");
+            var myRssContent = new Window("RSS Reader", "rss");
             var myRssStatus = myRssContent.parentElement.lastChild;
             myRssStatus.className = "loading";
             rssReader(myRssContent, myRssStatus);

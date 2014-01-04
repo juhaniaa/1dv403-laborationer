@@ -72,7 +72,7 @@
 }
 
 .headDiv span.iV{background-image:url(../pics/imageViewMini.gif);}
-.headDiv span.RSS{background-image:url(../pics/rssMini.png);}
+.headDiv span.rss{background-image:url(../pics/rssMini.png);}
 
 .headDiv .aClose{
     margin:5px;
@@ -88,18 +88,26 @@
     transform:scale(1.2, 1.2);
 }
 
-.contentDiv{
+.iVContentDiv, .rssContentDiv{
     height:84%;
     width:100%;
     background-color:rgb(230,230,230);
     overflow-y:scroll;
 }
 
-.contentDiv p, .contentDiv h2{
-    padding:25px;
+.iVContentDiv{
 
 }
 
+.rssContentDiv a, .rssContentDiv p, .rssContentDiv h2{
+    margin:5px 10px 5px 10px;
+    display:block;
+}
+
+.rssContentDiv p{
+    border-bottom:1px dotted black;
+    margin-bottom:40px;
+}
 
 .statusDiv{
     height:7%;
