@@ -2,14 +2,15 @@
 "use strict";
 
 /* Skapar div element för ett fönster och lägger till på desk samt returnerar referens till content delen av fönstret */
-function Window() {
+function Window(headText, type) {
     var desk = document.getElementById("desk");
     var winDiv = document.createElement("div");
     winDiv.className = "winDiv";
     var headDiv = document.createElement("div");
     headDiv.className = "headDiv";
-    headDiv.innerHTML = "Image Viewer";
+    headDiv.innerHTML = headText;
     var iconSpan = document.createElement("span");
+    iconSpan.className = type;
     headDiv.appendChild(iconSpan);
     var aClose = document.createElement("a");
     aClose.className = "aClose";
@@ -23,6 +24,9 @@ function Window() {
     contentDiv.className = "contentDiv";
     var statusDiv = document.createElement("div");
     statusDiv.className = "statusDiv";
+    statusDiv.innerHTML = "loading";
+    var statusSpan = document.createElement("span");
+    statusDiv.appendChild(statusSpan);
     winDiv.appendChild(headDiv);
     winDiv.appendChild(contentDiv);
     winDiv.appendChild(statusDiv);
@@ -36,20 +40,22 @@ function imageViewer(myContent, myStatus) {
     var maxWidth = 0;
     var maxHeight = 0;
     
+    /* Lägger till ny css rule med max höjd och bredd för bild divarna */
+    function changeCss(ruleName) {
+        var i;
+        for (i = 0; i < document.styleSheets[0].cssRules.length; i += 1) {
+            if(document.styleSheets[0].cssRules[i].selectorText == ruleName){
+                document.styleSheets[0].insertRule(".picDiv { height:"+maxHeight+"}",0);
+                document.styleSheets[0].insertRule(".picDiv { width:"+maxWidth+"}",0);
+                i += 2;
+            }
+        }
+    }
+    
     /* Skapar div taggar med img taggar inuti och lägger till i contentDiv */
     function createImage(element, index, array) {
         
-        /* Lägger till ny css rule med max höjd och bredd för bild divarna */
-        function changeCss(ruleName) {
-                var i;
-                for (i = 0; i < document.styleSheets[0].cssRules.length; i += 1) {
-                    if(document.styleSheets[0].cssRules[i].selectorText == ruleName){
-                        document.styleSheets[0].insertRule(".picDiv { height:"+maxHeight+"}",0);
-                        document.styleSheets[0].insertRule(".picDiv { width:"+maxWidth+"}",0);
-                        i += 2;
-                    }
-                }
-            }
+        
         
         var box = document.createElement("div");
         box.className = "picDiv";
@@ -97,8 +103,27 @@ function imageViewer(myContent, myStatus) {
                 console.log("Läsfel, status:" + xhr.status);
             }
         }
-    };  
+    };
     xhr.open("get", "http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/", true);
+    xhr.send(null);
+}
+
+function rssReader(myRssContent, myRssStatus){
+    /* Ajax anrop */
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            myRssStatus.className = "statusDiv";
+            myRssStatus.innerHTML = "";
+            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
+                /* Lägg in xhr.responseText i myRssContent */
+                myRssContent.innerHTML = xhr.responseText;
+            } else {
+                console.log("Läsfel, status:" + xhr.status);
+            }
+        }
+    };
+    xhr.open("get", "http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/?url="+escape("http://www.dn.se/m/rss/senaste-nytt"), true);
     xhr.send(null);
 }
 
@@ -110,11 +135,21 @@ var DesktopApp = {
         iVicon.className = "iVicon";
         menu.appendChild(iVicon);
         iVicon.onclick = function () {
-            var myContent = new Window();
+            var myContent = new Window("Image Viewer", "iV");
             var myStatus = myContent.parentElement.lastChild;
             myStatus.className = "loading";
-            myStatus.innerHTML = "loading";
             imageViewer(myContent, myStatus);
+            return false;
+        };
+        var rssIcon = document.createElement("a");
+        rssIcon.href = "#";
+        rssIcon.className = "rssIcon";
+        menu.appendChild(rssIcon);
+        rssIcon.onclick = function () {
+            var myRssContent = new Window("RSS Reader", "RSS");
+            var myRssStatus = myRssContent.parentElement.lastChild;
+            myRssStatus.className = "loading";
+            rssReader(myRssContent, myRssStatus);
             return false;
         };
     }
