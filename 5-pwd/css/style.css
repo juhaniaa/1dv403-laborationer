@@ -5,6 +5,8 @@
     width:1024px;
 }
 
+/* START Menu Style */
+
 #menu{
     width:1024px;
     height:50px;
@@ -15,41 +17,39 @@
     background-color:rgba(0,0,0,0.7);
 }
 
-.iVicon{
+.iVicon, .rssIcon, .memoryIcon{
     float:left;
     height:40px;
     width:40px;
     display:block;
     background-size:contain;
-    background-image:url(../pics/imageView.gif);
     margin:5px;
     transition:transform 0.7s;
 }
 
-.iVicon:hover{
+.iVicon:hover, .rssIcon:hover, .memoryIcon:hover{
     transform:scale(1.2, 1.2);
 }
+
+.iVicon{
+    background-image:url(../pics/imageView.gif);    
+}
+
 
 .rssIcon{
-    float:left;
-    height:40px;
-    width:40px;
-    display:block;
-    background-size:contain;
     background-image:url(../pics/rss.png);
-    margin:5px;
-    transition:transform 0.7s;
 }
 
-.rssIcon:hover{
-    transform:scale(1.2, 1.2);
+.memoryIcon{
+    background-image:url(../pics/memory.gif);
 }
+
+/* END Menu Style */
 
 /* START Window style */
 .winDiv{
     height:350px;
     width:295px;
-    margin:5px 0 0 5px;
     position:absolute;
     border:3px solid rgb(100,100,100);
 }
@@ -73,6 +73,7 @@
 
 .headDiv span.iV{background-image:url(../pics/imageViewMini.gif);}
 .headDiv span.rss{background-image:url(../pics/rssMini.png);}
+.headDiv span.memory{background-image:url(../pics/memoryMini.gif);}
 
 .headDiv .aClose{
     margin:5px;
@@ -88,7 +89,7 @@
     transform:scale(1.2, 1.2);
 }
 
-.iVContentDiv, .rssContentDiv{
+.iVContentDiv, .rssContentDiv, .memoryContentDiv{
     height:84%;
     width:100%;
     background-color:rgb(230,230,230);
@@ -155,3 +156,68 @@
 }
 
 /* END Window style */
+
+/* START Memory Style */
+
+.memoryContentDiv td a{
+    width:24px;
+    height:24px;
+    display:block;
+    margin:10px;
+    border:1px solid black;
+    padding:2px;
+    background-position:center;
+    background-repeat:no-repeat;
+}
+
+.memoryContentDiv table{
+    padding:10px;
+    margin:3px;
+    width:90%;
+    height:90%;
+    margin:auto;
+}
+
+.memoryContentDiv p{
+    text-align:center;
+    margin-top:-10px;
+}
+
+
+.zero{
+    background-image:url(../pics/0.png);
+}
+
+.one{
+    background-image:url(../pics/1.png);
+}
+
+.two{
+    background-image:url(../pics/2.png);
+}
+
+.three{
+    background-image:url(../pics/3.png);
+}
+
+.four{
+    background-image:url(../pics/4.png);
+}
+
+.five{
+    background-image:url(../pics/5.png);
+}
+
+.six{
+    background-image:url(../pics/6.png);
+}
+
+.seven{
+    background-image:url(../pics/7.png);
+}
+
+.eight{
+    background-image:url(../pics/8.png);
+}
+
+/* END Memory Style */

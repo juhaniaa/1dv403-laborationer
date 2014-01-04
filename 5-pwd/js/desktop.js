@@ -2,10 +2,11 @@
 "use strict";
 
 /* Skapar div element för ett fönster och lägger till på desk samt returnerar referens till content delen av fönstret */
-function Window(headText, type) {
+function Window(headText, type, xPosition, yPosition) {
     var desk = document.getElementById("desk");
     var winDiv = document.createElement("div");
     winDiv.className = "winDiv";
+    winDiv.setAttribute("style", "margin-top:" + yPosition + "px; margin-left:" + xPosition + "px");
     var headDiv = document.createElement("div");
     headDiv.className = "headDiv";
     headDiv.innerHTML = headText;
@@ -17,14 +18,29 @@ function Window(headText, type) {
     aClose.href = "#";
     aClose.onclick = function () {
         desk.removeChild(winDiv);
+        if(DesktopApp.xWinPosition == 0){
+            DesktopApp.xWinPosition = 700;
+            if(DesktopApp.yWinPosition != 0){
+                DesktopApp.yWinPosition = DesktopApp.yWinPosition - 13;
+            }
+        } else{
+            DesktopApp.xWinPosition = DesktopApp.xWinPosition - 14;
+        }
+        if(DesktopApp.yWinPosition == 0){
+            DesktopApp.yWinPosition = 208;
+        }else{
+            DesktopApp.yWinPosition = DesktopApp.yWinPosition - 13;
+        }
         return false;
     };
     headDiv.appendChild(aClose);
     var contentDiv = document.createElement("div");
-    contentDiv.className = type+"ContentDiv";
+    contentDiv.className = type + "ContentDiv";
     var statusDiv = document.createElement("div");
     statusDiv.className = "statusDiv";
-    statusDiv.innerHTML = "loading";
+    if (type === "rss" || type === "iV") {
+        statusDiv.innerHTML = "loading";
+    }
     var statusSpan = document.createElement("span");
     statusDiv.appendChild(statusSpan);
     winDiv.appendChild(headDiv);
@@ -44,9 +60,9 @@ function imageViewer(myContent, myStatus) {
     function changeCss(ruleName) {
         var i;
         for (i = 0; i < document.styleSheets[0].cssRules.length; i += 1) {
-            if(document.styleSheets[0].cssRules[i].selectorText == ruleName){
-                document.styleSheets[0].insertRule(".picDiv { height:"+maxHeight+"}",0);
-                document.styleSheets[0].insertRule(".picDiv { width:"+maxWidth+"}",0);
+            if (document.styleSheets[0].cssRules[i].selectorText === ruleName) {
+                document.styleSheets[0].insertRule(".picDiv { height:" + maxHeight + "}", 0);
+                document.styleSheets[0].insertRule(".picDiv { width:" + maxWidth + "}", 0);
                 i += 2;
             }
         }
@@ -67,10 +83,10 @@ function imageViewer(myContent, myStatus) {
         /* Då bilden klickas ändras bakgrunden */
         aTag.onclick = function () {
             var bgUrl = element.URL;
-            document.styleSheets[0].insertRule("#desk { background-image:url("+bgUrl+");}",document.styleSheets[0].cssRules.length);
+            document.styleSheets[0].insertRule("#desk { background-image:url(" + bgUrl + ");}", document.styleSheets[0].cssRules.length);
             return false;
-        }
-        aTag.appendChild(pic)
+        };
+        aTag.appendChild(pic);
         box.appendChild(aTag);
         myContent.appendChild(box);
         
@@ -84,7 +100,7 @@ function imageViewer(myContent, myStatus) {
         
         if (index + 1 === array.length) {
             
-            changeCss(".picDiv");        
+            changeCss(".picDiv");
         }
     }
     
@@ -108,7 +124,7 @@ function imageViewer(myContent, myStatus) {
     xhr.send(null);
 }
 
-function rssReader(myRssContent, myRssStatus){
+function rssReader(myRssContent, myRssStatus) {
     /* Ajax anrop */
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
@@ -123,19 +139,36 @@ function rssReader(myRssContent, myRssStatus){
             }
         }
     };
-    xhr.open("get", "http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/?url="+escape("http://www.dn.se/m/rss/senaste-nytt"), true);
+    xhr.open("get", "http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/?url=" + escape("http://www.dn.se/m/rss/senaste-nytt"), true);
     xhr.send(null);
 }
 
 var DesktopApp = {
     init: function () {
+        var position = 0;
         var menu = document.getElementById("menu");
         var iVicon = document.createElement("a");
         iVicon.href = "#";
         iVicon.className = "iVicon";
         menu.appendChild(iVicon);
         iVicon.onclick = function () {
-            var myContent = new Window("Image Viewer", "iV");
+            // Om ywinPos > 17 fönster
+            if (DesktopApp.yWinPosition > 210) {
+            // ...ändra till 13
+                DesktopApp.yWinPosition = 13;
+            // ...annars lägg till 13
+            } else {
+                DesktopApp.yWinPosition = DesktopApp.yWinPosition + 13;
+            }
+            // Om xwinPos > 30 fönster
+            if (DesktopApp.xWinPosition > 700) {
+            // ...ändra till 14
+                DesktopApp.xWinPosition = 14;
+            // ...annars lägg till 14
+            } else {
+                DesktopApp.xWinPosition = DesktopApp.xWinPosition + 14;
+            }
+            var myContent = new Window("Image Viewer", "iV", DesktopApp.xWinPosition, DesktopApp.yWinPosition);
             var myStatus = myContent.parentElement.lastChild;
             myStatus.className = "loading";
             imageViewer(myContent, myStatus);
@@ -146,13 +179,56 @@ var DesktopApp = {
         rssIcon.className = "rssIcon";
         menu.appendChild(rssIcon);
         rssIcon.onclick = function () {
-            var myRssContent = new Window("RSS Reader", "rss");
+            // Om ywinPos > 14 fönster
+            if (DesktopApp.yWinPosition > 210) {
+            // ...ändra till 13
+                DesktopApp.yWinPosition = 13;
+            // ...annars lägg till 13
+            } else {
+                DesktopApp.yWinPosition = DesktopApp.yWinPosition + 13;
+            }
+            // Om xwinPos > 30 fönster
+            if (DesktopApp.xWinPosition > 700) {
+            // ...ändra till 14
+                DesktopApp.xWinPosition = 14;
+            // ...annars lägg till 14
+            } else {
+                DesktopApp.xWinPosition = DesktopApp.xWinPosition + 14;
+            }
+            var myRssContent = new Window("RSS Reader", "rss", DesktopApp.xWinPosition, DesktopApp.yWinPosition);
             var myRssStatus = myRssContent.parentElement.lastChild;
             myRssStatus.className = "loading";
             rssReader(myRssContent, myRssStatus);
             return false;
         };
-    }
+        var memoryIcon = document.createElement("a");
+        memoryIcon.href = "#";
+        memoryIcon.className = "memoryIcon";
+        menu.appendChild(memoryIcon);
+        memoryIcon.onclick = function () {
+            // Om ywinPos > 14 fönster
+            if (DesktopApp.yWinPosition > 210) {
+            // ...ändra till 13
+                DesktopApp.yWinPosition = 13;
+            // ...annars lägg till 13
+            } else {
+                DesktopApp.yWinPosition = DesktopApp.yWinPosition + 13;
+            }
+            // Om xwinPos > 30 fönster
+            if (DesktopApp.xWinPosition > 700) {
+            // ...ändra till 14
+                DesktopApp.xWinPosition = 14;
+            // ...annars lägg till 14
+            } else {
+                DesktopApp.xWinPosition = DesktopApp.xWinPosition + 14;
+            }
+            var myMemoryContent = new Window("Memory", "memory", DesktopApp.xWinPosition, DesktopApp.yWinPosition);
+            new Memory(4, 4, myMemoryContent);
+            return false;
+        };
+    },
+    xWinPosition: 0,
+    yWinPosition: 0
 };
 
 window.onload = DesktopApp.init;
