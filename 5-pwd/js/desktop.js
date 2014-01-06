@@ -3,10 +3,16 @@
 
 /* Skapar div element för ett fönster och lägger till på desk samt returnerar referens till content delen av fönstret */
 function Window(headText, type, xPosition, yPosition) {
+    DesktopApp.winZIndex = DesktopApp.winZIndex + 1;
     var desk = document.getElementById("desk");
     var winDiv = document.createElement("div");
     winDiv.className = "winDiv";
-    winDiv.setAttribute("style", "margin-top:" + yPosition + "px; margin-left:" + xPosition + "px");
+    winDiv.setAttribute("style", "z-index:" + DesktopApp.winZIndex + "; margin-top:" + yPosition + "px; margin-left:" + xPosition + "px");
+    winDiv.onclick = function () {
+        winDiv.setAttribute("style", "z-index:" + DesktopApp.winZIndex + "; margin-top:" + yPosition + "px; margin-left:" + xPosition + "px");
+        DesktopApp.winZIndex = DesktopApp.winZIndex + 1;
+    };
+    
     var headDiv = document.createElement("div");
     headDiv.className = "headDiv";
     headDiv.innerHTML = headText;
@@ -18,17 +24,17 @@ function Window(headText, type, xPosition, yPosition) {
     aClose.href = "#";
     aClose.onclick = function () {
         desk.removeChild(winDiv);
-        if(DesktopApp.xWinPosition == 0){
+        if (DesktopApp.xWinPosition === 0) {
             DesktopApp.xWinPosition = 700;
-            if(DesktopApp.yWinPosition != 0){
+            if (DesktopApp.yWinPosition !== 0) {
                 DesktopApp.yWinPosition = DesktopApp.yWinPosition - 13;
             }
-        } else{
+        } else {
             DesktopApp.xWinPosition = DesktopApp.xWinPosition - 14;
         }
-        if(DesktopApp.yWinPosition == 0){
+        if (DesktopApp.yWinPosition === 0) {
             DesktopApp.yWinPosition = 208;
-        }else{
+        } else {
             DesktopApp.yWinPosition = DesktopApp.yWinPosition - 13;
         }
         return false;
@@ -128,12 +134,18 @@ function rssReader(myRssContent, myRssStatus) {
     /* Ajax anrop */
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
+        var i;
         if (xhr.readyState === 4) {
             myRssStatus.className = "statusDiv";
             myRssStatus.innerHTML = "";
             if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
                 /* Lägg in xhr.responseText i myRssContent */
                 myRssContent.innerHTML = xhr.responseText;
+                var aTags = myRssContent.getElementsByTagName("a");
+                
+                for (i=0; i<aTags.length; i+=1){
+                    aTags[i].setAttribute('target', '_blank');
+                }
             } else {
                 console.log("Läsfel, status:" + xhr.status);
             }
@@ -228,7 +240,8 @@ var DesktopApp = {
         };
     },
     xWinPosition: 0,
-    yWinPosition: 0
+    yWinPosition: 0,
+    winZIndex: 0
 };
 
 window.onload = DesktopApp.init;
