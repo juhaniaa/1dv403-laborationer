@@ -1,247 +1,147 @@
 /*global console, window, document, confirm */
 "use strict";
-
-/* Skapar div element för ett fönster och lägger till på desk samt returnerar referens till content delen av fönstret */
-function Window(headText, type, xPosition, yPosition) {
-    DesktopApp.winZIndex = DesktopApp.winZIndex + 1;
-    var desk = document.getElementById("desk");
-    var winDiv = document.createElement("div");
-    winDiv.className = "winDiv";
-    winDiv.setAttribute("style", "z-index:" + DesktopApp.winZIndex + "; margin-top:" + yPosition + "px; margin-left:" + xPosition + "px");
-    winDiv.onclick = function () {
-        winDiv.setAttribute("style", "z-index:" + DesktopApp.winZIndex + "; margin-top:" + yPosition + "px; margin-left:" + xPosition + "px");
-        DesktopApp.winZIndex = DesktopApp.winZIndex + 1;
-    };
-    
-    var headDiv = document.createElement("div");
-    headDiv.className = "headDiv";
-    headDiv.innerHTML = headText;
-    var iconSpan = document.createElement("span");
-    iconSpan.className = type;
-    headDiv.appendChild(iconSpan);
-    var aClose = document.createElement("a");
-    aClose.className = "aClose";
-    aClose.href = "#";
-    aClose.onclick = function () {
-        desk.removeChild(winDiv);
-        if (DesktopApp.xWinPosition === 0) {
-            DesktopApp.xWinPosition = 700;
-            if (DesktopApp.yWinPosition !== 0) {
-                DesktopApp.yWinPosition = DesktopApp.yWinPosition - 13;
-            }
-        } else {
-            DesktopApp.xWinPosition = DesktopApp.xWinPosition - 14;
-        }
-        if (DesktopApp.yWinPosition === 0) {
-            DesktopApp.yWinPosition = 208;
-        } else {
-            DesktopApp.yWinPosition = DesktopApp.yWinPosition - 13;
-        }
-        return false;
-    };
-    headDiv.appendChild(aClose);
-    var contentDiv = document.createElement("div");
-    contentDiv.className = type + "ContentDiv";
-    var statusDiv = document.createElement("div");
-    statusDiv.className = "statusDiv";
-    if (type === "rss" || type === "iV") {
-        statusDiv.innerHTML = "loading";
-    }
-    var statusSpan = document.createElement("span");
-    statusDiv.appendChild(statusSpan);
-    winDiv.appendChild(headDiv);
-    winDiv.appendChild(contentDiv);
-    winDiv.appendChild(statusDiv);
-    desk.appendChild(winDiv);
-    return contentDiv;
-}
-
-/* Anropas då iVicon klickas */
-/* Gör ett ajax anrop och får en sträng med alla bilder */
-function imageViewer(myContent, myStatus) {
-    var maxWidth = 0;
-    var maxHeight = 0;
-    
-    /* Lägger till ny css rule med max höjd och bredd för bild divarna */
-    function changeCss(ruleName) {
-        var i;
-        for (i = 0; i < document.styleSheets[0].cssRules.length; i += 1) {
-            if (document.styleSheets[0].cssRules[i].selectorText === ruleName) {
-                document.styleSheets[0].insertRule(".picDiv { height:" + maxHeight + "}", 0);
-                document.styleSheets[0].insertRule(".picDiv { width:" + maxWidth + "}", 0);
-                i += 2;
-            }
-        }
-    }
-    
-    /* Skapar div taggar med img taggar inuti och lägger till i contentDiv */
-    function createImage(element, index, array) {
-        
-        
-        
-        var box = document.createElement("div");
-        box.className = "picDiv";
-        var pic = document.createElement("img");
-        pic.setAttribute("src", element.thumbURL);
-        var aTag = document.createElement("a");
-        aTag.href = "#";
-        
-        /* Då bilden klickas ändras bakgrunden */
-        aTag.onclick = function () {
-            var bgUrl = element.URL;
-            document.styleSheets[0].insertRule("#desk { background-image:url(" + bgUrl + ");}", document.styleSheets[0].cssRules.length);
-            return false;
-        };
-        aTag.appendChild(pic);
-        box.appendChild(aTag);
-        myContent.appendChild(box);
-        
-        if (element.thumbWidth > maxWidth) {
-            maxWidth = element.thumbWidth;
-        }
-        
-        if (element.thumbHeight > maxHeight) {
-            maxHeight = element.thumbHeight;
-        }
-        
-        if (index + 1 === array.length) {
-            
-            changeCss(".picDiv");
-        }
-    }
-    
-    /* Ajax anrop som returnerar array med bild-objekt */
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            myStatus.className = "statusDiv";
-            myStatus.innerHTML = "";
-            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
-                var picArray = JSON.parse(xhr.responseText);
-                
-                /* för varje object i picArray anropa createImage */
-                picArray.forEach(createImage);
-            } else {
-                console.log("Läsfel, status:" + xhr.status);
-            }
-        }
-    };
-    xhr.open("get", "http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/", true);
-    xhr.send(null);
-}
-
-function rssReader(myRssContent, myRssStatus) {
-    /* Ajax anrop */
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function () {
-        var i;
-        if (xhr.readyState === 4) {
-            myRssStatus.className = "statusDiv";
-            myRssStatus.innerHTML = "";
-            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
-                /* Lägg in xhr.responseText i myRssContent */
-                myRssContent.innerHTML = xhr.responseText;
-                var aTags = myRssContent.getElementsByTagName("a");
-                
-                for (i=0; i<aTags.length; i+=1){
-                    aTags[i].setAttribute('target', '_blank');
-                }
-            } else {
-                console.log("Läsfel, status:" + xhr.status);
-            }
-        }
-    };
-    xhr.open("get", "http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/?url=" + escape("http://www.dn.se/m/rss/senaste-nytt"), true);
-    xhr.send(null);
-}
-
 var DesktopApp = {
     init: function () {
-        var position = 0;
-        var menu = document.getElementById("menu");
-        var iVicon = document.createElement("a");
-        iVicon.href = "#";
-        iVicon.className = "iVicon";
-        menu.appendChild(iVicon);
-        iVicon.onclick = function () {
-            // Om ywinPos > 17 fönster
-            if (DesktopApp.yWinPosition > 210) {
-            // ...ändra till 13
-                DesktopApp.yWinPosition = 13;
-            // ...annars lägg till 13
-            } else {
-                DesktopApp.yWinPosition = DesktopApp.yWinPosition + 13;
+        DesktopApp.createIcon("Image Viewer", "iV");
+        DesktopApp.createIcon("RSS Reader", "rss");  // kunde lägga till en array med rss adresser
+        DesktopApp.createIcon("Memory", "memory");
+    },
+    
+    createIcon: function (header, type) {
+        var reqAddress,
+            menu,
+            icon;
+        menu = document.getElementById("menu");
+        icon = document.createElement("a");    // ...lägg till en a tag/icon
+        icon.href = "#";
+        icon.className = type + "icon";    // ...av önskad typ
+        menu.appendChild(icon);    // ...i menyn
+        
+        icon.onclick = function () {    // ...då iconen klickas
+            var content,
+                status;
+            DesktopApp.nextWinPosition();   // ...ta reda på det nya fönstrets position
+            content = new Window(header, type);    // ...skapa det nya fönstret
+            status = content.parentElement.lastChild;
+            if (type === "iV") {    // om det är en ImageViewer icon
+                status.className = "loading";
+                reqAddress = "http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/";
+                DesktopApp.xhrRequest(content, status, type, reqAddress);
+            } else if (type === "rss") {    // om det är en Rss icon
+                status.className = "loading";
+                reqAddress = "http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/?url=" + escape("http://www.dn.se/m/rss/senaste-nytt");
+                DesktopApp.xhrRequest(content, status, type, reqAddress); // gör ajax anrop med önskad adress
+            } else if (type === "memory") {    // om det är en Memory icon
+                new Memory(4, 4, content);
             }
-            // Om xwinPos > 30 fönster
-            if (DesktopApp.xWinPosition > 700) {
-            // ...ändra till 14
-                DesktopApp.xWinPosition = 14;
-            // ...annars lägg till 14
-            } else {
-                DesktopApp.xWinPosition = DesktopApp.xWinPosition + 14;
-            }
-            var myContent = new Window("Image Viewer", "iV", DesktopApp.xWinPosition, DesktopApp.yWinPosition);
-            var myStatus = myContent.parentElement.lastChild;
-            myStatus.className = "loading";
-            imageViewer(myContent, myStatus);
-            return false;
-        };
-        var rssIcon = document.createElement("a");
-        rssIcon.href = "#";
-        rssIcon.className = "rssIcon";
-        menu.appendChild(rssIcon);
-        rssIcon.onclick = function () {
-            // Om ywinPos > 14 fönster
-            if (DesktopApp.yWinPosition > 210) {
-            // ...ändra till 13
-                DesktopApp.yWinPosition = 13;
-            // ...annars lägg till 13
-            } else {
-                DesktopApp.yWinPosition = DesktopApp.yWinPosition + 13;
-            }
-            // Om xwinPos > 30 fönster
-            if (DesktopApp.xWinPosition > 700) {
-            // ...ändra till 14
-                DesktopApp.xWinPosition = 14;
-            // ...annars lägg till 14
-            } else {
-                DesktopApp.xWinPosition = DesktopApp.xWinPosition + 14;
-            }
-            var myRssContent = new Window("RSS Reader", "rss", DesktopApp.xWinPosition, DesktopApp.yWinPosition);
-            var myRssStatus = myRssContent.parentElement.lastChild;
-            myRssStatus.className = "loading";
-            rssReader(myRssContent, myRssStatus);
-            return false;
-        };
-        var memoryIcon = document.createElement("a");
-        memoryIcon.href = "#";
-        memoryIcon.className = "memoryIcon";
-        menu.appendChild(memoryIcon);
-        memoryIcon.onclick = function () {
-            // Om ywinPos > 14 fönster
-            if (DesktopApp.yWinPosition > 210) {
-            // ...ändra till 13
-                DesktopApp.yWinPosition = 13;
-            // ...annars lägg till 13
-            } else {
-                DesktopApp.yWinPosition = DesktopApp.yWinPosition + 13;
-            }
-            // Om xwinPos > 30 fönster
-            if (DesktopApp.xWinPosition > 700) {
-            // ...ändra till 14
-                DesktopApp.xWinPosition = 14;
-            // ...annars lägg till 14
-            } else {
-                DesktopApp.xWinPosition = DesktopApp.xWinPosition + 14;
-            }
-            var myMemoryContent = new Window("Memory", "memory", DesktopApp.xWinPosition, DesktopApp.yWinPosition);
-            new Memory(4, 4, myMemoryContent);
             return false;
         };
     },
+    
+    xhrRequest: function (divContent, divStatus, type, reqAddress) {
+        
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            var i,
+                picArray,
+                aTags;
+            if (xhr.readyState === 4) {
+                divStatus.className = "statusDiv";
+                divStatus.innerHTML = "";
+                if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {    // då status är ok
+                    
+                    if (type === "iV") {  // om Image Viewer
+                        picArray = JSON.parse(xhr.responseText);    // hämta ut arrayen med object representation av bilderna
+                        
+                        for (i = 0; i < picArray.length; i += 1) {    // sedan för varje object
+                            DesktopApp.createImage(picArray[i], i, picArray, divContent);   // anropa createImage
+                        }
+                    } else if (type === "rss") {    // om Rss Reader
+                        divContent.innerHTML = xhr.responseText;    // Lägg in xhr.responseText i rssContent
+                        aTags = divContent.getElementsByTagName("a");   // varje a tag i rss-läsaren...
+                        for (i = 0; i < aTags.length; i += 1) {
+                            aTags[i].setAttribute('target', '_blank');  // ...öppnas i nytt fönster
+                        }
+                    }
+                } else {    // om status inte är ok...
+                    console.log("Läsfel, status:" + xhr.status);    // ...logga fel-meddelande
+                }
+            }
+        };
+        
+        xhr.open("get", reqAddress, true);
+        xhr.send(null);
+
+    },
+    
+    createImage: function (element, index, array, content) {
+        var maxWidth = 0,
+            maxHeight = 0,
+            box,
+            pic,
+            aTag,
+            i;
+        
+        box = document.createElement("div");
+        box.className = "picDiv";
+        pic = document.createElement("img");
+        pic.setAttribute("src", element.thumbURL);
+        aTag = document.createElement("a");
+        aTag.href = "#";
+        
+        /* Då bilden klickas öppnas den i ett nytt anpassat fönster */
+        aTag.onclick = function () {
+            var picContent,
+                myPicWindow,
+                picZindex;
+            picContent = new Window("Image", "image", DesktopApp.xWinPosition, DesktopApp.yWinPosition);
+            myPicWindow = picContent.parentElement;
+            picZindex = DesktopApp.winZIndex + 2;
+            myPicWindow.setAttribute("style", myPicWindow.style.cssText + "z-index:" + picZindex + "; background-image:url(" + element.URL + ");");
+            return false;
+        };
+        
+        aTag.appendChild(pic);  // lägg till de skapade noderna i content
+        box.appendChild(aTag);
+        content.appendChild(box);
+        
+        if (element.thumbWidth > maxWidth) {    // se om denna bild är bredast
+            maxWidth = element.thumbWidth;  // isåfall ändra max bredden
+        }
+        
+        if (element.thumbHeight > maxHeight) {  // se om denna bild är högst
+            maxHeight = element.thumbHeight;    // isåfall ändra max höjden
+        }
+        
+        if (index + 1 === array.length) { // om detta är den sista bilden
+            for (i = 0; i < array.length; i += 1) {  // ändra box bredden för varje div i content
+                content.childNodes[i].style.height = maxHeight;
+                content.childNodes[i].style.width = maxWidth;
+            }
+        }
+    },
+    
+    nextWinPosition: function () {
+        if (DesktopApp.yWinPosition > DesktopApp.maxYPosition) {    // Om ywinPos > maxPosition
+            DesktopApp.yWinPosition = DesktopApp.stepYPosition;   // ...ändra till ett steg
+        } else {
+            DesktopApp.yWinPosition = DesktopApp.yWinPosition + DesktopApp.stepYPosition;     // ...annars lägg till ett steg
+        }
+        if (DesktopApp.xWinPosition > DesktopApp.maxXPosition) {    // Om xwinPos > maxPosition
+            DesktopApp.xWinPosition = DesktopApp.stepXPosition;   // ...ändra till ett steg
+        } else {
+            DesktopApp.xWinPosition = DesktopApp.xWinPosition + 14;     // ...annars lägg till ett steg
+        }
+    },
+    winZIndex: 0,
     xWinPosition: 0,
     yWinPosition: 0,
-    winZIndex: 0
+    maxXPosition: 700,
+    maxYPosition: 208,
+    stepXPosition: 14,
+    stepYPosition: 13,
+    minWinPosition: 0
+    
 };
 
 window.onload = DesktopApp.init;
