@@ -58,10 +58,14 @@
 .headDiv{
     height:31.5px;
     width:100%;
-    color:white;
-    background:-moz-linear-gradient(90deg, rgb(230,230,230), black);
-    text-align:center;
-    
+    color:white; 
+    padding-top:2px;
+    background-color: black; /* Fallback color if gradients are not supported */
+    background:-webkit-linear-gradient(0deg, rgb(230,230,230), black); /* Chorme and Safari */
+    background:-moz-linear-gradient(0deg, rgb(230,230,230), black); /* Old Fx */
+    background:-ms-linear-gradient(0deg, rgb(230,230,230), black); /* pre IE 10 */
+    background:-o-linear-gradient(0deg, rgb(230,230,230), black); /* Old Opera */
+    background:linear-gradient(0deg, rgb(230,230,230), black); /* standard syntax */
 }
 
 .headDiv span{
@@ -90,6 +94,49 @@
     transform:scale(1.2, 1.2);
 }
 
+.headDiv .aContext{
+    color:white;
+    position:absolute;
+    margin-left:20px;
+}
+
+.popMenu{
+    width:100%;
+    height:100%;
+    background-color:rgba(0,0,0,0.6);
+    position:absolute;
+    z-index:10000;
+}
+
+.popMenu div{
+    background-color:rgb(210,210,210);
+    position:absolute;
+    margin-top:60px;
+    margin-left:60px;
+    border:3px solid black;
+    padding:15px;
+}
+
+.popMenu a{
+    color:black;
+    background-color:rgb(230,230,230);
+    text-decoration:none;
+    clear:both;
+    float:left;
+    padding:15px;
+    width:inherit;
+    width:100px;
+    border:1px solid black;
+    margin:10px;
+    text-align:center;
+    transition:transform 0.2s, background-color 0.5s;
+}
+
+.popMenu a:hover{
+    transform:scale(1.005, 1.005);
+    background-color:rgb(245,245,245);
+}
+
 .iVContentDiv, .rssContentDiv, .memoryContentDiv, .imageContentDiv{
     height:84%;
     width:100%;
@@ -110,16 +157,23 @@
     margin-bottom:40px;
 }
 
+.statusDiv, .loading{
+    background-color: black; /* Fallback color if gradients are not supported */
+    background:-webkit-linear-gradient(180deg, rgb(230,230,230), black); /* Chorme and Safari */
+    background:-moz-linear-gradient(180deg, rgb(230,230,230), black); /* Old Fx */
+    background:-ms-linear-gradient(180deg, rgb(230,230,230), black); /* pre IE 10 */
+    background:-o-linear-gradient(180deg, rgb(230,230,230), black); /* Old Opera */
+    background:linear-gradient(180deg, rgb(230,230,230), black); /* standard syntax */
+}
+
 .statusDiv{
     height:24.5px;
     width:100%;
-    background:-moz-linear-gradient(-90deg, rgb(230,230,230), black);
 }
 
 .loading{
     height:7%;
     width:100%;
-    background:-moz-linear-gradient(-90deg, rgb(230,230,230), black);
     text-indent:25px;
     color:white;
 }

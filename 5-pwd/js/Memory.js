@@ -1,5 +1,5 @@
 /*global document, RandomGenerator*/
-function Memory(rows, cols, memoryContentDiv, gameId) {
+function Memory(rows, cols, memoryContentDiv) {
     "use strict";
     
     var cssPosition = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight"];

@@ -20,6 +20,11 @@ function Window(headText, type) {
     var iconSpan = document.createElement("span");
     iconSpan.className = type;    // typ av fönster som öppnas
     headDiv.appendChild(iconSpan);
+    
+    
+
+    
+    
     var aClose = document.createElement("a");
     aClose.className = "aClose";
     aClose.href = "#";
@@ -45,6 +50,48 @@ function Window(headText, type) {
     
     var contentDiv = document.createElement("div");
     contentDiv.className = type + "ContentDiv";
+    
+        /* START TEMP LÄGG TILL CONTEXT-MENY */
+    
+    if (type === "memory") {
+        var aContext = document.createElement("a");
+        aContext.innerHTML = "Redigera";
+        aContext.className = "aContext";
+        aContext.href = "#";
+        aContext.onclick = function () {
+            
+            var popMenu = document.createElement("div");    // skapa div tag
+            popMenu.className = "popMenu";
+            var restartPopMenu = document.createElement("a");  // lägg till a-tag
+            restartPopMenu.href = "#";
+            restartPopMenu.innerHTML = "Starta om spelet";
+            restartPopMenu.onclick = function () {    // a-tagens onclick skall göra så att spelet startar om
+                contentDiv.removeChild(contentDiv.firstChild);
+                winDiv.removeChild(popMenu);
+                new Memory(4, 4, contentDiv);
+                return false;
+            };
+            var cancelPopMenu = document.createElement("a");
+            cancelPopMenu.href = "#";
+            cancelPopMenu.innerHTML = "Avbryt";
+            cancelPopMenu.onclick = function () {
+                winDiv.removeChild(popMenu);
+                return false;
+            };
+            var tagsPopMenu = document.createElement("div");
+            tagsPopMenu.appendChild(restartPopMenu);
+            tagsPopMenu.appendChild(cancelPopMenu);
+            popMenu.appendChild(tagsPopMenu);
+            // lägg till inuti parent elementet(winDiv)
+            headDiv.parentElement.insertBefore(popMenu, headDiv);
+            return false;
+            
+        };
+        headDiv.appendChild(aContext);
+    }
+    
+    /* END TEMP LÄGG TILL CONTEXT-MENY */
+    
     var statusDiv = document.createElement("div");
     statusDiv.className = "statusDiv";
     if (type === "rss" || type === "iV") {  // om det är ett rss eller image viewer fönster skall det innehålla texten "loading"

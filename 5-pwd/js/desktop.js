@@ -95,7 +95,6 @@ var DesktopApp = {
             DesktopApp.nextWinPosition();   // ...ta reda på det nya fönstrets position
             picContent = new Window("Image", "image");
             picContent.parentElement.style.width = element.width;
-            console.log(element.height);
             picContent.parentElement.style.height = element.height + 56;
             picContent.style.backgroundImage = "url(" + element.URL + ")";
             picContent.style.height = element.height;
