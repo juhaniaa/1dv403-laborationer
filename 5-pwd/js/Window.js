@@ -1,25 +1,24 @@
 "use strict";
 /* skapar ett nytt fönster, ger den dess position samt z-index utifrån de variabler som finns på desktopApp */
 function Window(headText, type) {
-    
     DesktopApp.winZIndex = DesktopApp.winZIndex + 1; // öka på z-index eftersom ett nytt fönster skall skapas
     var desk = document.getElementById("desk");
     var winDiv = document.createElement("div");
     winDiv.className = "winDiv";
-    winDiv.style.zIndex = DesktopApp.winZIndex; // z-index gör så att fönstret hamnar överst
-    winDiv.style.marginTop = DesktopApp.yWinPosition; // yWinPosition är nästa fönsters lodräta position
-    winDiv.style.marginLeft = DesktopApp.xWinPosition; // xWinPosition är nästa fönsters vertikala position
+    winDiv.style.zIndex = DesktopApp.winZIndex;    // z-index gör så att fönstret hamnar överst
+    winDiv.style.marginTop = DesktopApp.yWinPosition;   // yWinPosition är nästa fönsters lodräta position
+    winDiv.style.marginLeft = DesktopApp.xWinPosition;  // xWinPosition är nästa fönsters vertikala position
     
-    winDiv.onclick = function () {    // då användaren klickar på ett fönster ändras dess z-index så att det klickade fönstret kommer överst
+    winDiv.onmousedown = function () {    // då användaren klickar på ett fönster ändras dess z-index så att det klickade fönstret kommer överst
         DesktopApp.winZIndex = DesktopApp.winZIndex + 1;
         winDiv.style.zIndex = DesktopApp.winZIndex;
     };
     
     var headDiv = document.createElement("div");
     headDiv.className = "headDiv";
-    headDiv.innerHTML = headText; // fönster-typs-rubrik
+    headDiv.innerHTML = headText;    // fönster-typs-rubrik
     var iconSpan = document.createElement("span");
-    iconSpan.className = type; // typ av fönster som öppnas
+    iconSpan.className = type;    // typ av fönster som öppnas
     headDiv.appendChild(iconSpan);
     var aClose = document.createElement("a");
     aClose.className = "aClose";
@@ -33,7 +32,7 @@ function Window(headText, type) {
                 DesktopApp.yWinPosition = DesktopApp.yWinPosition - DesktopApp.stepYPosition;
             }
         } else {
-            DesktopApp.xWinPosition = DesktopApp.xWinPosition - DesktopApp.stepYPosition;   // då nästa Xposition inte är lägsta möjliga minska det med ett steg
+            DesktopApp.xWinPosition = DesktopApp.xWinPosition - DesktopApp.stepXPosition;   // då nästa Xposition inte är lägsta möjliga minska det med ett steg
         }
         if (DesktopApp.yWinPosition === DesktopApp.minWinPosition) {    // om nästa fönsters Yposition är lägsta möjliga
             DesktopApp.yWinPosition = DesktopApp.maxYPosition;  // ändra nästa fönsters Yposition till max-värde
@@ -42,8 +41,8 @@ function Window(headText, type) {
         }
         return false;
     };
-    
     headDiv.appendChild(aClose);
+    
     var contentDiv = document.createElement("div");
     contentDiv.className = type + "ContentDiv";
     var statusDiv = document.createElement("div");

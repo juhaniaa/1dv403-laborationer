@@ -15,6 +15,7 @@
     position:absolute;
     color:white;
     background-color:rgba(0,0,0,0.7);
+    z-index:10000;
 }
 
 .iVicon, .rssIcon, .memoryIcon{
@@ -55,7 +56,7 @@
 }
 
 .headDiv{
-    height:9%;
+    height:31.5px;
     width:100%;
     color:white;
     background:-moz-linear-gradient(90deg, rgb(230,230,230), black);
@@ -89,15 +90,14 @@
     transform:scale(1.2, 1.2);
 }
 
-.iVContentDiv, .rssContentDiv, .memoryContentDiv{
+.iVContentDiv, .rssContentDiv, .memoryContentDiv, .imageContentDiv{
     height:84%;
     width:100%;
     background-color:rgb(230,230,230);
-    overflow-y:scroll;
 }
 
-.iVContentDiv{
-
+.iVContentDiv, .rssContentDiv, .memoryContentDiv{
+    overflow-y:scroll;
 }
 
 .rssContentDiv a, .rssContentDiv p, .rssContentDiv h2{
@@ -111,7 +111,7 @@
 }
 
 .statusDiv{
-    height:7%;
+    height:24.5px;
     width:100%;
     background:-moz-linear-gradient(-90deg, rgb(230,230,230), black);
 }

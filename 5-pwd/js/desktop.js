@@ -91,15 +91,23 @@ var DesktopApp = {
         
         /* Då bilden klickas öppnas den i ett nytt anpassat fönster */
         aTag.onclick = function () {
-            var picContent,
-                myPicWindow,
-                picZindex;
-            picContent = new Window("Image", "image", DesktopApp.xWinPosition, DesktopApp.yWinPosition);
-            myPicWindow = picContent.parentElement;
-            picZindex = DesktopApp.winZIndex + 2;
-            myPicWindow.setAttribute("style", myPicWindow.style.cssText + "z-index:" + picZindex + "; background-image:url(" + element.URL + ");");
+            var picContent;
+            DesktopApp.nextWinPosition();   // ...ta reda på det nya fönstrets position
+            picContent = new Window("Image", "image");
+            picContent.parentElement.style.width = element.width;
+            console.log(element.height);
+            picContent.parentElement.style.height = element.height + 56;
+            picContent.style.backgroundImage = "url(" + element.URL + ")";
+            picContent.style.height = element.height;
+            
+                    
+            picContent.oncontextmenu = function () {
+                content.parentElement.parentElement.style.backgroundImage = "url(" + element.URL + ")";
+                return false;
+            };
             return false;
         };
+
         
         aTag.appendChild(pic);  // lägg till de skapade noderna i content
         box.appendChild(aTag);
@@ -122,7 +130,7 @@ var DesktopApp = {
     },
     
     nextWinPosition: function () {
-        if (DesktopApp.yWinPosition > DesktopApp.maxYPosition) {    // Om ywinPos > maxPosition
+        if (DesktopApp.yWinPosition > DesktopApp.maxYPosition) {    // Om ywinPos > maxYPosition
             DesktopApp.yWinPosition = DesktopApp.stepYPosition;   // ...ändra till ett steg
         } else {
             DesktopApp.yWinPosition = DesktopApp.yWinPosition + DesktopApp.stepYPosition;     // ...annars lägg till ett steg
