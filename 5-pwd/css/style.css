@@ -68,13 +68,20 @@
     background:linear-gradient(0deg, rgb(230,230,230), black); /* standard syntax */
 }
 
+.headDiv:hover{
+    cursor:pointer;
+}
+
 .headDiv span{
     margin:5px;
     height:20px;
     width:20px;
     display:block;
     float:left;
+    position:relative;
+    margin-top:1px;
 }
+
 
 .headDiv span.iV{background-image:url(../pics/imageViewMini.gif);}
 .headDiv span.rss{background-image:url(../pics/rssMini.png);}
@@ -275,3 +282,15 @@
 }
 
 /* END Memory Style */
+
+/* START Drag and Drop */
+
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+
+/* END Drag and Drop */

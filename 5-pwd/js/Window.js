@@ -5,7 +5,9 @@ function Window(headText, type) {
     var desk = document.getElementById("desk");
     var winDiv = document.createElement("div");
     winDiv.className = "winDiv";
+    winDiv.draggable = true;
     winDiv.style.zIndex = DesktopApp.winZIndex;    // z-index gör så att fönstret hamnar överst
+    winDiv.id = DesktopApp.winZIndex;
     winDiv.style.marginTop = DesktopApp.yWinPosition;   // yWinPosition är nästa fönsters lodräta position
     winDiv.style.marginLeft = DesktopApp.xWinPosition;  // xWinPosition är nästa fönsters vertikala position
     
@@ -19,15 +21,98 @@ function Window(headText, type) {
     headDiv.innerHTML = headText;    // fönster-typs-rubrik
     var iconSpan = document.createElement("span");
     iconSpan.className = type;    // typ av fönster som öppnas
-    headDiv.appendChild(iconSpan);
     
     
 
     
     
+    
+    
+    /* START DRAG N DROP */
+    
+
+
+    headDiv.onmousedown = function () {
+
+    
+        function handleDragStart (e){
+
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData("text", e.target.id); // needed for FF
+            return false;
+            
+        };
+        function handleDragEnter (e){
+
+        };
+        
+        function handleDragOver (e){;
+            if(e.preventDefault){
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = "move";
+            return false;
+        };
+        function handleDragLeave (e){
+        
+        };
+        
+        function handleDrop(e) {
+            console.log(e.dataTransfer.getData("text"));
+            var tempDiv = e.dataTransfer.getData("text");
+            console.log(e);
+            console.log(e.target);
+            console.log(this);
+            //winDiv.style.marginLeft = e.clientX;
+            //winDiv.style.marginTop = e.clientY;
+            
+          // this / e.target is current target element.
+        
+            var divId = e.dataTransfer.getData("text");
+            console.log(document.getElementById(divId));
+            var movedDiv = document.getElementById(divId);
+            movedDiv.style.marginTop = e.clientY;
+            movedDiv.style.marginLeft = e.clientX;
+
+            
+          if (e.stopPropagation) {
+            e.stopPropagation(); // stops the browser from redirecting.
+          }
+        
+          // See the section on the DataTransfer object.
+            e.preventDefault(); // så att firefox inte söker sig till datatransfer
+          return false;
+        }
+    
+        function handleDragEnd(e) {
+          // this/e.target is the source node.
+            console.log("drag end");
+        desk.removeEventListener("dragstart", handleDragStart, false);
+        desk.removeEventListener("dragenter",handleDragEnter, false);
+        desk.removeEventListener("dragover",handleDragOver, false);
+        desk.removeEventListener("dragleave",handleDragLeave, false);
+        desk.removeEventListener("drop", handleDrop, false);
+        desk.removeEventListener("dragend", handleDragEnd, false);
+        }
+        
+        desk.addEventListener("dragstart", handleDragStart, false);
+        desk.addEventListener("dragenter",handleDragEnter, false);
+        desk.addEventListener("dragover",handleDragOver, false);
+        desk.addEventListener("dragleave",handleDragLeave, false);
+        desk.addEventListener("drop", handleDrop, false);
+        desk.addEventListener("dragend", handleDragEnd, false);
+};
+    
+    
+    /* END DRAG N DROP */
+    
+    
+    headDiv.appendChild(iconSpan);
+    
     var aClose = document.createElement("a");
     aClose.className = "aClose";
     aClose.href = "#";
+    aClose.draggable = false;
     
     aClose.onclick = function () {  // då användaren stänger ett fönster
         desk.removeChild(winDiv);   // ta bort det specifika fönstret ur strukturen
@@ -51,22 +136,23 @@ function Window(headText, type) {
     var contentDiv = document.createElement("div");
     contentDiv.className = type + "ContentDiv";
     
-        /* START TEMP LÄGG TILL CONTEXT-MENY */
+        /* START CONTEXT-MENY */
     
     if (type === "memory") {
         var aContext = document.createElement("a");
         aContext.innerHTML = "Redigera";
         aContext.className = "aContext";
         aContext.href = "#";
+        aContext.draggable = false;
         aContext.onclick = function () {
             
             var popMenu = document.createElement("div");    // skapa div tag
             popMenu.className = "popMenu";
             var restartPopMenu = document.createElement("a");  // lägg till a-tag
             restartPopMenu.href = "#";
-            restartPopMenu.innerHTML = "Starta om spelet";
+            restartPopMenu.innerHTML = "Nytt spel";
             restartPopMenu.onclick = function () {    // a-tagens onclick skall göra så att spelet startar om
-                contentDiv.removeChild(contentDiv.firstChild);
+                contentDiv.innerHTML = "";
                 winDiv.removeChild(popMenu);
                 new Memory(4, 4, contentDiv);
                 return false;
@@ -90,7 +176,7 @@ function Window(headText, type) {
         headDiv.appendChild(aContext);
     }
     
-    /* END TEMP LÄGG TILL CONTEXT-MENY */
+    /* END CONTEXT-MENY */
     
     var statusDiv = document.createElement("div");
     statusDiv.className = "statusDiv";
