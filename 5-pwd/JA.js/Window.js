@@ -13,11 +13,17 @@ JA.Window = function (headText, type) {
         popMenu,
         restartPopMenu,
         cancelPopMenu,
+        updatePopMenu,
+        intervallPopMenu,
+        sourcePopMenu,
         tagsPopMenu,
         statusDiv,
-        statusSpan;
+        statusSpan,
+        xMposStart,
+        yMposStart,
+        that;
     
-    JA.DesktopApp.winZIndex = JA.DesktopApp.winZIndex + 1; // öka på z-index eftersom ett nytt fönster skall skapas
+    JA.DesktopApp.winZIndex += 1; // öka på z-index eftersom ett nytt fönster skall skapas
     desk = document.getElementById("desk");
     winDiv = document.createElement("div");
     winDiv.className = "winDiv";
@@ -27,8 +33,8 @@ JA.Window = function (headText, type) {
     winDiv.style.marginLeft = JA.DesktopApp.xWinPosition;  // xWinPosition är nästa fönsters vertikala position
     
     winDiv.onmousedown = function () {    // då användaren klickar på ett fönster ändras dess z-index så att det klickade fönstret kommer överst
-        JA.DesktopApp.winZIndex = JA.DesktopApp.winZIndex + 1;
-        winDiv.style.zIndex = JA.DesktopApp.winZIndex;
+        JA.DesktopApp.winZIndex += 1;
+        this.style.zIndex = JA.DesktopApp.winZIndex;
     };
     
     headDiv = document.createElement("div");
@@ -38,76 +44,81 @@ JA.Window = function (headText, type) {
     iconSpan.className = type;    // typ av fönster som öppnas
     
     /* START DRAG N DROP */
-    headDiv.onmousedown = function () {
-        var xMposStart,
-            yMposStart,
-            that = this.parentElement;
+    function handleDragStart(e) {
+        that = e.target;
+        xMposStart = e.clientX;
+        yMposStart = e.clientY;
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData("text", "moving"); // needed for FF
+        return false;
+    }
+    function handleDragEnter(e) {
+    }
     
-        function handleDragStart(e) {
-            xMposStart = e.clientX;
-            yMposStart = e.clientY;
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData("text", "moving"); // needed for FF
-            return false;
+    function handleDragOver(e) {
+        if (e.preventDefault) {
+            e.preventDefault();
         }
-        function handleDragEnter(e) {
-        }
-        
-        function handleDragOver(e) {
-            if (e.preventDefault) {
-                e.preventDefault();
-            }
-            e.dataTransfer.dropEffect = "move";
-            return false;
-        }
-        function handleDragLeave(e) {
-        }
-        
-        function handleDrop(e) {
-            var xDifference,
-                yDifference,
-                styleTemp,
-                yOrigPos,
-                xOrigPos,
-                newY,
-                newX;
-            xDifference = e.clientX - xMposStart;
-            yDifference = e.clientY - yMposStart;
+        e.dataTransfer.dropEffect = "move";
+        return false;
+    }
+    function handleDragLeave(e) {
+    }
+    
+    function handleDrop(e) {
+        var xDifference,
+            yDifference,
+            styleTemp,
+            yOrigPos,
+            xOrigPos,
+            newY,
+            newX;
+        xDifference = e.clientX - xMposStart;
+        yDifference = e.clientY - yMposStart;
 
-            styleTemp = that.currentStyel || window.getComputedStyle(that);
-            yOrigPos = styleTemp.marginTop.match(/\d/g);
-            yOrigPos = parseInt(yOrigPos.join(""), 10);
-            xOrigPos = styleTemp.marginLeft.match(/\d/g);
-            xOrigPos = parseInt(xOrigPos.join(""), 10);
-            
-            newY = yOrigPos + yDifference;
-            newX = xOrigPos + xDifference;
-            
-            that.style.marginTop = newY;
-            that.style.marginLeft = newX;
-            
-            if (e.stopPropagation) {
-                e.stopPropagation(); // stops the browser from redirecting.
-            }
-            e.preventDefault(); // så att firefox inte söker sig till datatransfer
-            return false;
-        }
-    
-        function handleDragEnd(e) {
-            desk.removeEventListener("dragstart", handleDragStart, false);
-            desk.removeEventListener("dragenter", handleDragEnter, false);
-            desk.removeEventListener("dragover", handleDragOver, false);
-            desk.removeEventListener("dragleave", handleDragLeave, false);
-            desk.removeEventListener("drop", handleDrop, false);
-            desk.removeEventListener("dragend", handleDragEnd, false);
-        }
+        styleTemp = that.currentStyel || window.getComputedStyle(that);
+        yOrigPos = styleTemp.marginTop.match(/\d/g);
+        yOrigPos = parseInt(yOrigPos.join(""), 10);
+        xOrigPos = styleTemp.marginLeft.match(/\d/g);
+        xOrigPos = parseInt(xOrigPos.join(""), 10);
         
+        newY = yOrigPos + yDifference;
+        newX = xOrigPos + xDifference;
+        
+        that.style.marginTop = newY;
+        that.style.marginLeft = newX;
+        
+        if (e.stopPropagation) {
+            e.stopPropagation(); // stops the browser from redirecting.
+        }
+        e.preventDefault(); // så att firefox inte söker sig till datatransfer
+        return false;
+    }
+
+    function handleDragEnd(e) {
+        desk.removeEventListener("dragstart", handleDragStart, false);
+        desk.removeEventListener("dragenter", handleDragEnter, false);
+        desk.removeEventListener("dragover", handleDragOver, false);
+        desk.removeEventListener("dragleave", handleDragLeave, false);
+        desk.removeEventListener("drop", handleDrop, false);
+        desk.removeEventListener("dragend", handleDragEnd, false);
+    }
+    
+    headDiv.onmousedown = function () {
         desk.addEventListener("dragstart", handleDragStart, false);
         desk.addEventListener("dragenter", handleDragEnter, false);
         desk.addEventListener("dragover", handleDragOver, false);
         desk.addEventListener("dragleave", handleDragLeave, false);
         desk.addEventListener("drop", handleDrop, false);
         desk.addEventListener("dragend", handleDragEnd, false);
+    };
+    headDiv.onclick = function () {
+        desk.removeEventListener("dragstart", handleDragStart, false);
+        desk.removeEventListener("dragenter", handleDragEnter, false);
+        desk.removeEventListener("dragover", handleDragOver, false);
+        desk.removeEventListener("dragleave", handleDragLeave, false);
+        desk.removeEventListener("drop", handleDrop, false);
+        desk.removeEventListener("dragend", handleDragEnd, false);
     };
     /* END DRAG N DROP */
     
@@ -119,7 +130,7 @@ JA.Window = function (headText, type) {
     aClose.draggable = false;
     
     aClose.onclick = function () {  // då användaren stänger ett fönster
-        desk.removeChild(winDiv);   // ta bort det specifika fönstret ur strukturen
+        desk.removeChild(this.parentElement.parentElement);   // ta bort det specifika fönstret ur strukturen
         if (JA.DesktopApp.xWinPosition === JA.DesktopApp.minWinPosition) {    // om nästa fönsters Xpositionen är lägsta möjliga då ett fönster stängs
             JA.DesktopApp.xWinPosition = JA.DesktopApp.maxXPosition;  // ändra nästa fönsters Xposition till max-värde
             if (JA.DesktopApp.yWinPosition !== JA.DesktopApp.minWinPosition) {    // då nästa fönsters Yposition inte är lägsta möjliga minska dess värde med ett steg
@@ -152,15 +163,7 @@ JA.Window = function (headText, type) {
             
             popMenu = document.createElement("div");    // skapa div tag
             popMenu.className = "popMenu";
-            restartPopMenu = document.createElement("a");  // lägg till a-tag
-            restartPopMenu.href = "#";
-            restartPopMenu.innerHTML = "Nytt spel";
-            restartPopMenu.onclick = function () {    // a-tagens onclick skall göra så att spelet startar om
-                contentDiv.innerHTML = "";
-                winDiv.removeChild(popMenu);
-                new JA.Memory(4, 4, contentDiv);
-                return false;
-            };
+            
             cancelPopMenu = document.createElement("a");
             cancelPopMenu.href = "#";
             cancelPopMenu.innerHTML = "Avbryt";
@@ -168,14 +171,113 @@ JA.Window = function (headText, type) {
                 winDiv.removeChild(popMenu);
                 return false;
             };
+            
+
+            var selection = document.createElement("select");
+            selection.className = "selection";
+            var option1 = document.createElement("option");
+            option1.nodeValue = 2;
+            option1.innerHTML = "2";
+            var option2 = document.createElement("option");
+            option2.nodeValue = 3;
+            option2.innerHTML = "3";
+            var option3 = document.createElement("option");
+            option3.nodeValue = 4;
+            option3.innerHTML = "4";
+            selection.appendChild(option1);
+            selection.appendChild(option2);
+            selection.appendChild(option3);
+            
+            var selectionx = document.createElement("select");
+            selectionx.className = "selectionx";
+            var option1x = document.createElement("option");
+            option1x.nodeValue = 2;
+            option1x.innerHTML = "2";
+            var option2x = document.createElement("option");
+            option2x.nodeValue = 4;
+            option2x.innerHTML = "4";
+            selectionx.appendChild(option1x);
+            selectionx.appendChild(option2x);
+
+            
+            
+            
+            restartPopMenu = document.createElement("a");  // lägg till a-tag
+            restartPopMenu.href = "#";
+            restartPopMenu.innerHTML = "Nytt spel";
+            restartPopMenu.onclick = function () {    // a-tagens onclick skall göra så att spelet startar om
+                contentDiv.innerHTML = "";
+                winDiv.removeChild(popMenu);
+                
+                var selectedY = selection.options[selection.selectedIndex].value;
+                var selectedX = selectionx.options[selectionx.selectedIndex].value;
+                
+
+
+                new JA.Memory(selectedX, selectedY, contentDiv);
+                return false;
+            };
+            
             tagsPopMenu = document.createElement("div");
+            tagsPopMenu.innerHTML = "<p>Välj storlek</p>";
+            tagsPopMenu.appendChild(selection);
+            tagsPopMenu.appendChild(selectionx);
             tagsPopMenu.appendChild(restartPopMenu);
             tagsPopMenu.appendChild(cancelPopMenu);
+            
+            popMenu.appendChild(tagsPopMenu);
+            
+            headDiv.parentElement.insertBefore(popMenu, headDiv); // lägg till inuti parent elementet(winDiv)
+            return false;
+            
+        };
+        headDiv.appendChild(aContext);
+    }
+    
+    if (type === "rss") {
+        aContext = document.createElement("a");
+        aContext.innerHTML = "Redigera";
+        aContext.className = "aContext";
+        aContext.href = "#";
+        aContext.draggable = false;
+        aContext.onclick = function () {
+            
+            
+            popMenu = document.createElement("div");    // skapa div tag
+            popMenu.className = "popMenu";
+            intervallPopMenu = document.createElement("a");  // lägg till a-tag
+            intervallPopMenu.href = "#";
+            intervallPopMenu.innerHTML = "Uppdateringsintervall";
+            intervallPopMenu.onclick = function () {    // a-tagens onclick skall göra så att spelet startar om
+
+                return false;
+            };
+            sourcePopMenu = document.createElement("a");
+            sourcePopMenu.href = "#";
+            sourcePopMenu.innerHTML = "Välj Källa";
+            sourcePopMenu.onclick = function () {
+
+                return false;
+            };
+            
+            updatePopMenu = document.createElement("a");
+            updatePopMenu.href = "#";
+            updatePopMenu.innerHTML = "Uppdatera nu";
+            updatePopMenu.onclick = function () {
+
+                return false;
+            };
+            
+            tagsPopMenu = document.createElement("div");
+            tagsPopMenu.appendChild(intervallPopMenu);
+            tagsPopMenu.appendChild(sourcePopMenu);
+            tagsPopMenu.appendChild(updatePopMenu);
             popMenu.appendChild(tagsPopMenu);
             // lägg till inuti parent elementet(winDiv)
             headDiv.parentElement.insertBefore(popMenu, headDiv);
             return false;
-            
+        
+        
         };
         headDiv.appendChild(aContext);
     }

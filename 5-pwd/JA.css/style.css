@@ -123,9 +123,30 @@
     background-color:rgb(210,210,210);
     position:absolute;
     margin-top:60px;
-    margin-left:60px;
+    margin-left:30px;
     border:3px solid black;
     padding:15px;
+}
+.selection{
+    float:left;
+    position:absolute;
+    margin-left:50px;
+    margin-top:10px;
+}
+
+.selectionx{
+    float:left;
+    position:absolute;
+    margin-left:5px;
+    margin-top:10px;
+}
+
+
+.popMenu p{
+    display:block;
+    float:left;
+    margin:10px;
+
 }
 
 .popMenu a{
@@ -136,7 +157,7 @@
     float:left;
     padding:15px;
     width:inherit;
-    width:100px;
+    width:130px;
     border:1px solid black;
     margin:10px;
     text-align:center;
@@ -229,7 +250,7 @@
     width:24px;
     height:24px;
     display:block;
-    margin:10px;
+    margin:auto;
     border:1px solid black;
     padding:2px;
     background-position:center;
@@ -238,7 +259,6 @@
 
 .memoryContentDiv table{
     padding:10px;
-    margin:3px;
     width:90%;
     height:90%;
     margin:auto;
