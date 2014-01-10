@@ -1,10 +1,11 @@
 /*global console, window, document, confirm */
 "use strict";
-var DesktopApp = {
+var JA = JA || {};
+JA.DesktopApp = {
     init: function () {
-        DesktopApp.createIcon("Image Viewer", "iV");
-        DesktopApp.createIcon("RSS Reader", "rss");  // kunde lägga till en array med rss adresser
-        DesktopApp.createIcon("Memory", "memory");
+        JA.DesktopApp.createIcon("Image Viewer", "iV");
+        JA.DesktopApp.createIcon("RSS Reader", "rss");  // kunde lägga till en array med rss adresser
+        JA.DesktopApp.createIcon("Memory", "memory");
     },
     
     createIcon: function (header, type) {
@@ -20,19 +21,19 @@ var DesktopApp = {
         icon.onclick = function () {    // ...då iconen klickas
             var content,
                 status;
-            DesktopApp.nextWinPosition();   // ...ta reda på det nya fönstrets position
-            content = new Window(header, type);    // ...skapa det nya fönstret
+            JA.DesktopApp.nextWinPosition();   // ...ta reda på det nya fönstrets position
+            content = new JA.Window(header, type);    // ...skapa det nya fönstret
             status = content.parentElement.lastChild;
             if (type === "iV") {    // om det är en ImageViewer icon
                 status.className = "loading";
                 reqAddress = "http://homepage.lnu.se/staff/tstjo/labbyServer/imgviewer/";
-                DesktopApp.xhrRequest(content, status, type, reqAddress);
+                JA.DesktopApp.xhrRequest(content, status, type, reqAddress);
             } else if (type === "rss") {    // om det är en Rss icon
                 status.className = "loading";
                 reqAddress = "http://homepage.lnu.se/staff/tstjo/labbyServer/rssproxy/?url=" + escape("http://www.dn.se/m/rss/senaste-nytt");
-                DesktopApp.xhrRequest(content, status, type, reqAddress); // gör ajax anrop med önskad adress
+                JA.DesktopApp.xhrRequest(content, status, type, reqAddress); // gör ajax anrop med önskad adress
             } else if (type === "memory") {    // om det är en Memory icon
-                new Memory(4, 4, content);
+                new JA.Memory(4, 4, content);
             }
             return false;
         };
@@ -54,7 +55,7 @@ var DesktopApp = {
                         picArray = JSON.parse(xhr.responseText);    // hämta ut arrayen med object representation av bilderna
                         
                         for (i = 0; i < picArray.length; i += 1) {    // sedan för varje object
-                            DesktopApp.createImage(picArray[i], i, picArray, divContent);   // anropa createImage
+                            JA.DesktopApp.createImage(picArray[i], i, picArray, divContent);   // anropa createImage
                         }
                     } else if (type === "rss") {    // om Rss Reader
                         divContent.innerHTML = xhr.responseText;    // Lägg in xhr.responseText i rssContent
@@ -92,8 +93,8 @@ var DesktopApp = {
         /* Då bilden klickas öppnas den i ett nytt anpassat fönster */
         aTag.onclick = function () {
             var picContent;
-            DesktopApp.nextWinPosition();   // ...ta reda på det nya fönstrets position
-            picContent = new Window("Image", "image");
+            JA.DesktopApp.nextWinPosition();   // ...ta reda på det nya fönstrets position
+            picContent = new JA.Window("Image", "image");
             picContent.parentElement.style.width = element.width;
             picContent.parentElement.style.height = element.height + 56;
             picContent.style.backgroundImage = "url(" + element.URL + ")";
@@ -129,15 +130,15 @@ var DesktopApp = {
     },
     
     nextWinPosition: function () {
-        if (DesktopApp.yWinPosition > DesktopApp.maxYPosition) {    // Om ywinPos > maxYPosition
-            DesktopApp.yWinPosition = DesktopApp.stepYPosition;   // ...ändra till ett steg
+        if (JA.DesktopApp.yWinPosition > JA.DesktopApp.maxYPosition) {    // Om ywinPos > maxYPosition
+            JA.DesktopApp.yWinPosition = JA.DesktopApp.stepYPosition;   // ...ändra till ett steg
         } else {
-            DesktopApp.yWinPosition = DesktopApp.yWinPosition + DesktopApp.stepYPosition;     // ...annars lägg till ett steg
+            JA.DesktopApp.yWinPosition = JA.DesktopApp.yWinPosition + JA.DesktopApp.stepYPosition;     // ...annars lägg till ett steg
         }
-        if (DesktopApp.xWinPosition > DesktopApp.maxXPosition) {    // Om xwinPos > maxPosition
-            DesktopApp.xWinPosition = DesktopApp.stepXPosition;   // ...ändra till ett steg
+        if (JA.DesktopApp.xWinPosition > JA.DesktopApp.maxXPosition) {    // Om xwinPos > maxPosition
+            JA.DesktopApp.xWinPosition = JA.DesktopApp.stepXPosition;   // ...ändra till ett steg
         } else {
-            DesktopApp.xWinPosition = DesktopApp.xWinPosition + 14;     // ...annars lägg till ett steg
+            JA.DesktopApp.xWinPosition = JA.DesktopApp.xWinPosition + 14;     // ...annars lägg till ett steg
         }
     },
     winZIndex: 0,
@@ -151,4 +152,5 @@ var DesktopApp = {
     
 };
 
-window.onload = DesktopApp.init;
+
+window.onload = JA.DesktopApp.init;

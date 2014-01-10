@@ -1,5 +1,5 @@
 #desk{
-    background-image:url(../pics/wallpaper.jpg);
+    background-image:url(../JA.pics/wallpaper.jpg);
     background-position:center;
     height:640px;
     width:1024px;
@@ -33,16 +33,16 @@
 }
 
 .iVicon{
-    background-image:url(../pics/imageView.gif);    
+    background-image:url(../JA.pics/imageView.gif);    
 }
 
 
 .rssIcon{
-    background-image:url(../pics/rss.png);
+    background-image:url(../JA.pics/rss.png);
 }
 
 .memoryIcon{
-    background-image:url(../pics/memory.gif);
+    background-image:url(../JA.pics/memory.gif);
 }
 
 /* END Menu Style */
@@ -72,6 +72,10 @@
     cursor:pointer;
 }
 
+.headDivMoving{
+    cursor:pointer;
+}
+
 .headDiv span{
     margin:5px;
     height:20px;
@@ -83,15 +87,15 @@
 }
 
 
-.headDiv span.iV{background-image:url(../pics/imageViewMini.gif);}
-.headDiv span.rss{background-image:url(../pics/rssMini.png);}
-.headDiv span.memory{background-image:url(../pics/memoryMini.gif);}
+.headDiv span.iV{background-image:url(../JA.pics/imageViewMini.gif);}
+.headDiv span.rss{background-image:url(../JA.pics/rssMini.png);}
+.headDiv span.memory{background-image:url(../JA.pics/memoryMini.gif);}
 
 .headDiv .aClose{
     margin:5px;
     height:15px;
     width:15px;
-    background-image:url(../pics/x.png);
+    background-image:url(../JA.pics/x.png);
     float:right;
     display:block;
     transition:transform 0.5s;
@@ -152,6 +156,7 @@
 
 .iVContentDiv, .rssContentDiv, .memoryContentDiv{
     overflow-y:scroll;
+    overflow-x:hidden;
 }
 
 .rssContentDiv a, .rssContentDiv p, .rssContentDiv h2{
@@ -192,7 +197,7 @@
     display:block;
     height:100%;
     width:50%;
-    background-image:url(../pics/ajax-loader.gif);
+    background-image:url(../JA.pics/ajax-loader.gif);
     background-repeat:no-repeat;
     background-position:left;
 }
@@ -246,39 +251,39 @@
 
 
 .zero{
-    background-image:url(../pics/0.png);
+    background-image:url(../JA.pics/0.png);
 }
 
 .one{
-    background-image:url(../pics/1.png);
+    background-image:url(../JA.pics/1.png);
 }
 
 .two{
-    background-image:url(../pics/2.png);
+    background-image:url(../JA.pics/2.png);
 }
 
 .three{
-    background-image:url(../pics/3.png);
+    background-image:url(../JA.pics/3.png);
 }
 
 .four{
-    background-image:url(../pics/4.png);
+    background-image:url(../JA.pics/4.png);
 }
 
 .five{
-    background-image:url(../pics/5.png);
+    background-image:url(../JA.pics/5.png);
 }
 
 .six{
-    background-image:url(../pics/6.png);
+    background-image:url(../JA.pics/6.png);
 }
 
 .seven{
-    background-image:url(../pics/7.png);
+    background-image:url(../JA.pics/7.png);
 }
 
 .eight{
-    background-image:url(../pics/8.png);
+    background-image:url(../JA.pics/8.png);
 }
 
 /* END Memory Style */

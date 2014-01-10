@@ -1,5 +1,6 @@
 /*global document, RandomGenerator*/
-function Memory(rows, cols, memoryContentDiv) {
+var JA = JA || {};
+JA.Memory = function (rows, cols, memoryContentDiv) {
     "use strict";
     
     var cssPosition = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight"];
@@ -27,14 +28,14 @@ function Memory(rows, cols, memoryContentDiv) {
             }
             // endast två bilder skall kunna vändas samtidigt och en timer skall vända tillbaka de bilder som är uppvända
             // om bilden inte redan är rättsvängd och sväng tillbaka-timern är klar
-            if (this.mayTurn == true && ready == true) {
+            if (this.mayTurn === true && ready === true) {
         
                 // sväng på den klickade bilden
                 this.className = cssPosition[element];
                 this.mayTurn = false;
 
                 // om bilden inte har samma värde som den förra bilden och det inte är den första bilden som vänds...
-                if (element != last && last != 0) {
+                if (element !== last && last !== 0) {
                     
                     //sväng tillbaka bilderna
                     ready = false;
@@ -51,7 +52,7 @@ function Memory(rows, cols, memoryContentDiv) {
                     }, 1000);
                     
                 // Om det är ett par, räkna upp räknaren
-                } else if (element == last) {
+                } else if (element === last) {
                     count += 1;
                     last = 0;
                     increaseTries();
@@ -67,7 +68,7 @@ function Memory(rows, cols, memoryContentDiv) {
             if ((count * 2) >= array.length) {
                 // gör om meddelandet för när spelet är vunnet!!!!!!!!!!!!!!!!!!!
                 var p = document.createElement("p");
-                p.innerHTML = "Du vann på " + tries/2 + " försök!";
+                p.innerHTML = "Du vann på " + tries / 2 + " försök!";
                 memoryContentDiv.appendChild(p);
                 
                 
@@ -76,7 +77,7 @@ function Memory(rows, cols, memoryContentDiv) {
         }
         
         //då index % cols == 0 skapas en ny tr som läggs till i table
-        if (index % cols == 0) {
+        if (index % cols === 0) {
             table.appendChild(document.createElement("tr"));
         }
         
@@ -88,10 +89,11 @@ function Memory(rows, cols, memoryContentDiv) {
         a.className = "zero";
         a.href = "#";
         a.mayTurn = true;
+        a.draggable = false;
         a.onclick = turnPic;
         td.appendChild(a);
         table.lastChild.appendChild(td);
     }
     rndArray.forEach(createTable);
-}
+};
 
