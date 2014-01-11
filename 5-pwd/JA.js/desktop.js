@@ -94,7 +94,9 @@ JA.DesktopApp = {
         aTag.onclick = function () {
             var picContent;
             JA.DesktopApp.nextWinPosition();   // ...ta reda på det nya fönstrets position
-            picContent = new JA.Window("Image", "image");
+            var elemWidth = element.width;
+            var elemHeight = element.height;
+            picContent = new JA.Window("Image", "image", elemHeight, elemWidth);
             picContent.parentElement.style.width = element.width;
             picContent.parentElement.style.height = element.height + 56;
             picContent.style.backgroundImage = "url(" + element.URL + ")";

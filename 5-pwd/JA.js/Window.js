@@ -2,7 +2,9 @@
 var JA = JA || {};
 
 /* skapar ett nytt fönster, ger den dess position samt z-index utifrån de variabler som finns på desktopApp */
-JA.Window = function (headText, type) {
+
+JA.Window = function (headText, type, elemHeight, elemWidth) {
+
     var desk,
         winDiv,
         headDiv,
@@ -21,7 +23,7 @@ JA.Window = function (headText, type) {
         statusSpan,
         xMposStart,
         yMposStart,
-        that;
+        that;  
     
     JA.DesktopApp.winZIndex += 1; // öka på z-index eftersom ett nytt fönster skall skapas
     desk = document.getElementById("desk");
@@ -29,8 +31,15 @@ JA.Window = function (headText, type) {
     winDiv.className = "winDiv";
     winDiv.draggable = true;
     winDiv.style.zIndex = JA.DesktopApp.winZIndex;    // z-index gör så att fönstret hamnar överst
-    winDiv.style.marginTop = JA.DesktopApp.yWinPosition;   // yWinPosition är nästa fönsters lodräta position
-    winDiv.style.marginLeft = JA.DesktopApp.xWinPosition;  // xWinPosition är nästa fönsters vertikala position
+    
+    var tryXPos = JA.DesktopApp.xWinPosition;
+    var tryYPos = JA.DesktopApp.yWinPosition;
+  
+    var tryX = JA.Window.prototype.checkPos.call(winDiv, tryXPos, true, elemWidth); // !!!!!!!!!!!!!winDiv har ingen storlek
+    var tryY = JA.Window.prototype.checkPos.call(winDiv, tryYPos, false, elemHeight);
+    
+    winDiv.style.marginLeft = tryX;  // xWinPosition är nästa fönsters vertikala position
+    winDiv.style.marginTop = tryY;   // yWinPosition är nästa fönsters lodräta position
     
     winDiv.onmousedown = function () {    // då användaren klickar på ett fönster ändras dess z-index så att det klickade fönstret kommer överst
         JA.DesktopApp.winZIndex += 1;
@@ -82,8 +91,12 @@ JA.Window = function (headText, type) {
         xOrigPos = styleTemp.marginLeft.match(/\d/g);
         xOrigPos = parseInt(xOrigPos.join(""), 10);
         
-        newY = yOrigPos + yDifference;
+        newY = yOrigPos + yDifference; // Divens original position + skillnaden i rörelse blir den nya positionen
         newX = xOrigPos + xDifference;
+        
+        
+        newX = JA.Window.prototype.checkPos.call(that, newX, true); // kontrollera om den nya poitionen är godkänd i retur får vi den nya positionen rättad om så behövdes
+        newY = JA.Window.prototype.checkPos.call(that, newY, false);
         
         that.style.marginTop = newY;
         that.style.marginLeft = newX;
@@ -94,13 +107,17 @@ JA.Window = function (headText, type) {
         e.preventDefault(); // så att firefox inte söker sig till datatransfer
         return false;
     }
-
-    function handleDragEnd(e) {
+    
+    function removeEvents() {
         desk.removeEventListener("dragstart", handleDragStart, false);
         desk.removeEventListener("dragenter", handleDragEnter, false);
         desk.removeEventListener("dragover", handleDragOver, false);
         desk.removeEventListener("dragleave", handleDragLeave, false);
         desk.removeEventListener("drop", handleDrop, false);
+    }
+
+    function handleDragEnd(e) {
+        removeEvents();
         desk.removeEventListener("dragend", handleDragEnd, false);
     }
     
@@ -113,13 +130,11 @@ JA.Window = function (headText, type) {
         desk.addEventListener("dragend", handleDragEnd, false);
     };
     headDiv.onclick = function () {
-        desk.removeEventListener("dragstart", handleDragStart, false);
-        desk.removeEventListener("dragenter", handleDragEnter, false);
-        desk.removeEventListener("dragover", handleDragOver, false);
-        desk.removeEventListener("dragleave", handleDragLeave, false);
-        desk.removeEventListener("drop", handleDrop, false);
+        removeEvents();
         desk.removeEventListener("dragend", handleDragEnd, false);
     };
+    
+    
     /* END DRAG N DROP */
     
     headDiv.appendChild(iconSpan);
@@ -298,3 +313,44 @@ JA.Window = function (headText, type) {
     return contentDiv;
 };
 
+
+JA.Window.prototype.checkPos = function (supposedPos, xNotY, elemGivenSize) {
+
+    var maxValue; // #desk storlek är höjd: 640 (vi tar-50px för menyhöjden) och bredd: 1024 (max värden)
+    var elementSizeValue; // storleken på det faktiska elementet
+    if (xNotY) { // om xNotY === true så vill vi räkna ut ett x värde och spara elementets bredd
+        maxValue = 1024;
+        elementSizeValue = this.offsetWidth;
+        
+        if(elemGivenSize){
+            elementSizeValue = elemGivenSize + 10;
+        }
+    } else {
+        maxValue = 590; // om xNotY === false så vill vi räkna ut ett y värde och spara elementets höjd
+        elementSizeValue = this.offsetHeight;
+        
+        if(elemGivenSize){
+            elementSizeValue = elemGivenSize + 56;
+        }
+    }
+    
+    
+    
+    var allowedMaxValue = maxValue - supposedPos; // tillåtna storleken från tänkta positionen
+    
+    if (supposedPos < 0) {
+        supposedPos = 0;
+    }
+    
+    if (elementSizeValue > allowedMaxValue) { // Om elementet är större än tillåtet från förslagen position
+        supposedPos = maxValue - elementSizeValue; // Ändra position till max - elementets storlek
+    }
+    
+    if (elementSizeValue > maxValue) { // Om elementet är större än appen
+        supposedPos = 0; // Ändra position till längst upp/vänster
+    }
+    console.log(elementSizeValue + " elementets värde bredd/höjd");
+    console.log(supposedPos + " elementets posiotion maring top/left");
+    return supposedPos; // returnera sedan nya den eventuellt ändrade positionen
+    
+};
