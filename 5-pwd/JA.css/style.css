@@ -175,8 +175,12 @@
     background-color:rgb(230,230,230);
 }
 
+.imageContentDiv{
+    overflow:auto;
+}
+
 .iVContentDiv, .rssContentDiv, .memoryContentDiv{
-    overflow-y:scroll;
+    overflow-y:auto;
     overflow-x:hidden;
 }
 

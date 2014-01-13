@@ -94,16 +94,38 @@ JA.DesktopApp = {
         aTag.onclick = function () {
             var picContent;
             JA.DesktopApp.nextWinPosition();   // ...ta reda på det nya fönstrets position
-            var elemWidth = element.width;
-            var elemHeight = element.height;
-            picContent = new JA.Window("Image", "image", elemHeight, elemWidth);
-            picContent.parentElement.style.width = element.width;
-            picContent.parentElement.style.height = element.height + 56;
-            picContent.style.backgroundImage = "url(" + element.URL + ")";
-            picContent.style.height = element.height;
+            var elemWidth = element.width; // sparar bildens bredd
+            var elemHeight = element.height; // sparar bildens höjd
+            picContent = new JA.Window("Image", "image", elemHeight, elemWidth); // skapar ett nytt fönster
             
-                    
-            picContent.oncontextmenu = function () {
+            // skapa en img tag och ge dess src url för bilden
+            var imgTag = document.createElement("img");
+            imgTag.setAttribute("src", element.URL);
+            console.log(element.height);
+            console.log(element.width);
+            
+            imgTag.height = element.height;
+            imgTag.width = element.width;
+            picContent.appendChild(imgTag);
+            
+            if (element.width > 1024) { // om elementet är bredare än appen
+                picContent.parentElement.style.width = 1024; // sätt elementets fönster bredd till max
+                picContent.style.width = 1024;
+            } else {
+                picContent.parentElement.style.width = element.width; // annars sätt elementets fönster bredd till sin egen bredd
+                picContent.style.width = element.width;
+            }
+            
+            
+            if (element.height > 590) { // om elementets höjd är högre än appen
+                picContent.parentElement.style.height = 590; // sätt elementets fönster höjd till max
+                picContent.style.height = 590 - 56;
+            } else {
+                picContent.parentElement.style.height = element.height + 56; // annars sätt elementets fönster höjd till sin egen höjd
+                picContent.style.height = element.height;
+            }
+              
+            picContent.oncontextmenu = function () { // högerklick ändrar bakgrund
                 content.parentElement.parentElement.style.backgroundImage = "url(" + element.URL + ")";
                 return false;
             };

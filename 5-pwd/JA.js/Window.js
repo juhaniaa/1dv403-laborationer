@@ -35,7 +35,7 @@ JA.Window = function (headText, type, elemHeight, elemWidth) {
     var tryXPos = JA.DesktopApp.xWinPosition;
     var tryYPos = JA.DesktopApp.yWinPosition;
   
-    var tryX = JA.Window.prototype.checkPos.call(winDiv, tryXPos, true, elemWidth); // !!!!!!!!!!!!!winDiv har ingen storlek
+    var tryX = JA.Window.prototype.checkPos.call(winDiv, tryXPos, true, elemWidth); 
     var tryY = JA.Window.prototype.checkPos.call(winDiv, tryYPos, false, elemHeight);
     
     winDiv.style.marginLeft = tryX;  // xWinPosition är nästa fönsters vertikala position
@@ -348,6 +348,9 @@ JA.Window.prototype.checkPos = function (supposedPos, xNotY, elemGivenSize) {
     
     if (elementSizeValue > maxValue) { // Om elementet är större än appen
         supposedPos = 0; // Ändra position till längst upp/vänster
+        // och ändra elementet till overflow atuo
+        // och sätt höjden till max
+        
     }
     console.log(elementSizeValue + " elementets värde bredd/höjd");
     console.log(supposedPos + " elementets posiotion maring top/left");
