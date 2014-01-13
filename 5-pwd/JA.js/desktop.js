@@ -6,6 +6,7 @@ JA.DesktopApp = {
         JA.DesktopApp.createIcon("Image Viewer", "iV");
         JA.DesktopApp.createIcon("RSS Reader", "rss");  // kunde lägga till en array med rss adresser
         JA.DesktopApp.createIcon("Memory", "memory");
+        JA.DesktopApp.createIcon("Message", "message");
     },
     
     createIcon: function (header, type) {
@@ -34,6 +35,9 @@ JA.DesktopApp = {
                 JA.DesktopApp.xhrRequest(content, status, type, reqAddress); // gör ajax anrop med önskad adress
             } else if (type === "memory") {    // om det är en Memory icon
                 new JA.Memory(4, 4, content);
+            } else if (type === "message") {
+                new MessageBoard("board" + JA.DesktopApp.winZIndex, content);
+
             }
             return false;
         };

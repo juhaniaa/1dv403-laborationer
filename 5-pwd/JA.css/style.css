@@ -18,7 +18,7 @@
     z-index:10000;
 }
 
-.iVicon, .rssIcon, .memoryIcon{
+.iVicon, .rssIcon, .memoryIcon, .messageIcon{
     float:left;
     height:40px;
     width:40px;
@@ -28,7 +28,7 @@
     transition:transform 0.7s;
 }
 
-.iVicon:hover, .rssIcon:hover, .memoryIcon:hover{
+.iVicon:hover, .rssIcon:hover, .memoryIcon:hover, .messageIcon:hover{
     transform:scale(1.2, 1.2);
 }
 
@@ -43,6 +43,10 @@
 
 .memoryIcon{
     background-image:url(../JA.pics/memory.gif);
+}
+
+.messageIcon{
+    background-image:url(../JA.pics/labby.png);
 }
 
 /* END Menu Style */
@@ -90,6 +94,7 @@
 .headDiv span.iV{background-image:url(../JA.pics/imageViewMini.gif);}
 .headDiv span.rss{background-image:url(../JA.pics/rssMini.png);}
 .headDiv span.memory{background-image:url(../JA.pics/memoryMini.gif);}
+.headDiv span.message{background-image:url(../JA.pics/labbyMini.png);}
 
 .headDiv .aClose{
     margin:5px;
@@ -169,7 +174,7 @@
     background-color:rgb(245,245,245);
 }
 
-.iVContentDiv, .rssContentDiv, .memoryContentDiv, .imageContentDiv{
+.iVContentDiv, .rssContentDiv, .memoryContentDiv, .imageContentDiv, .messageContentDiv{
     height:84%;
     width:100%;
     background-color:rgb(230,230,230);
@@ -179,7 +184,7 @@
     overflow:auto;
 }
 
-.iVContentDiv, .rssContentDiv, .memoryContentDiv{
+.iVContentDiv, .rssContentDiv, .memoryContentDiv, .messageContentDiv{
     overflow-y:auto;
     overflow-x:hidden;
 }
@@ -323,3 +328,78 @@
 
 
 /* END Drag and Drop */
+
+/* START LABBYMEZZAGE */
+
+body
+{
+    font-family: 'Quintessential', Cursive;
+}
+
+p{
+    background-color:white;
+    margin-left:4%;
+    width:85%;
+    padding:10px;
+    padding-bottom:20px;
+}
+
+.aClose, .aTime
+{
+    width:15px;
+    height:15px;
+    display:block;
+    float:right;
+    margin: 3px;
+    background-size:contain;
+    }
+
+.aClose
+{
+    background-image:url(../JA.pics/delete.png);
+
+    }
+
+.aTime
+{
+    background-image:url(../JA.pics/time.png);
+}
+
+.messageArea span
+{
+    clear:both;
+    float:right;
+    }
+
+.textfield{
+    display:block;
+    background-color:white;
+    text-align:center;
+    margin-left:4%;
+    width:90%;
+    margin-top:10px;
+    margin-bottom:10px;
+    overflow: hidden;
+}
+
+textarea
+{
+    width:90%;
+    resize:none;
+    }
+
+.button
+{
+    border-radius:15px;
+    margin-top:5px;
+    float:right;
+    margin:3px;
+    }
+
+
+.bot{
+    height:1px;
+    display:block;
+}
+
+/* END LABBYMEZZAGE */
