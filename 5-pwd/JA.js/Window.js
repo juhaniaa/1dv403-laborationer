@@ -23,7 +23,7 @@ JA.Window = function (headText, type, elemHeight, elemWidth) {
         statusSpan,
         xMposStart,
         yMposStart,
-        that;  
+        that;
     
     JA.DesktopApp.winZIndex += 1; // öka på z-index eftersom ett nytt fönster skall skapas
     desk = document.getElementById("desk");
@@ -35,7 +35,7 @@ JA.Window = function (headText, type, elemHeight, elemWidth) {
     var tryXPos = JA.DesktopApp.xWinPosition;
     var tryYPos = JA.DesktopApp.yWinPosition;
   
-    var tryX = JA.Window.prototype.checkPos.call(winDiv, tryXPos, true, elemWidth); 
+    var tryX = JA.Window.prototype.checkPos.call(winDiv, tryXPos, true, elemWidth); // checkPos kontrollerar att fönstret hamnar innanför applikationen
     var tryY = JA.Window.prototype.checkPos.call(winDiv, tryYPos, false, elemHeight);
     
     winDiv.style.marginLeft = tryX;  // xWinPosition är nästa fönsters vertikala position
@@ -186,7 +186,6 @@ JA.Window = function (headText, type, elemHeight, elemWidth) {
                 winDiv.removeChild(popMenu);
                 return false;
             };
-            
 
             var selection = document.createElement("select");
             selection.className = "selection";
@@ -213,9 +212,6 @@ JA.Window = function (headText, type, elemHeight, elemWidth) {
             option2x.innerHTML = "4";
             selectionx.appendChild(option1x);
             selectionx.appendChild(option2x);
-
-            
-            
             
             restartPopMenu = document.createElement("a");  // lägg till a-tag
             restartPopMenu.href = "#";
@@ -227,8 +223,6 @@ JA.Window = function (headText, type, elemHeight, elemWidth) {
                 var selectedY = selection.options[selection.selectedIndex].value;
                 var selectedX = selectionx.options[selectionx.selectedIndex].value;
                 
-
-
                 new JA.Memory(selectedX, selectedY, contentDiv);
                 return false;
             };
@@ -279,7 +273,7 @@ JA.Window = function (headText, type, elemHeight, elemWidth) {
             updatePopMenu.href = "#";
             updatePopMenu.innerHTML = "Uppdatera nu";
             updatePopMenu.onclick = function () {
-
+                winDiv.removeChild(popMenu);
                 return false;
             };
             
@@ -288,11 +282,9 @@ JA.Window = function (headText, type, elemHeight, elemWidth) {
             tagsPopMenu.appendChild(sourcePopMenu);
             tagsPopMenu.appendChild(updatePopMenu);
             popMenu.appendChild(tagsPopMenu);
-            // lägg till inuti parent elementet(winDiv)
-            headDiv.parentElement.insertBefore(popMenu, headDiv);
+            
+            headDiv.parentElement.insertBefore(popMenu, headDiv); // lägg till inuti parent elementet(winDiv)
             return false;
-        
-        
         };
         headDiv.appendChild(aContext);
     }
@@ -303,6 +295,8 @@ JA.Window = function (headText, type, elemHeight, elemWidth) {
     statusDiv.className = "statusDiv";
     if (type === "rss" || type === "iV") {  // om det är ett rss eller image viewer fönster skall statusen innehålla texten "loading"
         statusDiv.innerHTML = "loading";
+    } else if (type === "image"){
+        statusDiv.innerHTML = "Högerklicka för att ändra till bakgrundsbild";
     }
     statusSpan = document.createElement("span");
     statusDiv.appendChild(statusSpan);
@@ -322,19 +316,17 @@ JA.Window.prototype.checkPos = function (supposedPos, xNotY, elemGivenSize) {
         maxValue = 1024;
         elementSizeValue = this.offsetWidth;
         
-        if(elemGivenSize){
+        if (elemGivenSize) { // då checkPos anropas med en given bredd
             elementSizeValue = elemGivenSize + 10;
         }
     } else {
         maxValue = 590; // om xNotY === false så vill vi räkna ut ett y värde och spara elementets höjd
         elementSizeValue = this.offsetHeight;
         
-        if(elemGivenSize){
+        if (elemGivenSize) { // då checkPos anropas med en given höjd
             elementSizeValue = elemGivenSize + 56;
         }
     }
-    
-    
     
     var allowedMaxValue = maxValue - supposedPos; // tillåtna storleken från tänkta positionen
     
@@ -348,12 +340,8 @@ JA.Window.prototype.checkPos = function (supposedPos, xNotY, elemGivenSize) {
     
     if (elementSizeValue > maxValue) { // Om elementet är större än appen
         supposedPos = 0; // Ändra position till längst upp/vänster
-        // och ändra elementet till overflow atuo
-        // och sätt höjden till max
         
     }
-    console.log(elementSizeValue + " elementets värde bredd/höjd");
-    console.log(supposedPos + " elementets posiotion maring top/left");
     return supposedPos; // returnera sedan nya den eventuellt ändrade positionen
     
 };

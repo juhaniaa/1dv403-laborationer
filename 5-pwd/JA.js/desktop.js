@@ -4,7 +4,7 @@ var JA = JA || {};
 JA.DesktopApp = {
     init: function () {
         JA.DesktopApp.createIcon("Image Viewer", "iV");
-        JA.DesktopApp.createIcon("RSS Reader", "rss");  // kunde lägga till en array med rss adresser
+        JA.DesktopApp.createIcon("RSS Reader", "rss");  
         JA.DesktopApp.createIcon("Memory", "memory");
         JA.DesktopApp.createIcon("Message", "message");
     },

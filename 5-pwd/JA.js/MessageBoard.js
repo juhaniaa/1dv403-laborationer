@@ -8,7 +8,7 @@ function MessageBoard(boardId, boardContent) {
     // Vi börjar med att skapa strukturen för ett chattfönster
     var boardDiv = document.createElement("div");
     boardDiv.id = boardId;
-    boardContent.appendChild(boardDiv); // lägger till boardDiv i bodyContent!!!
+    boardContent.appendChild(boardDiv); // lägger till boardDiv i bodyContent
     
     // Skapar en div med class messageArea lägger till den sist i boardDiv
     var messageAreaDiv = document.createElement("div");

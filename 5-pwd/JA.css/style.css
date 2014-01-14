@@ -211,6 +211,7 @@
 .statusDiv{
     height:24.5px;
     width:100%;
+    color:white;
 }
 
 .loading{
@@ -331,12 +332,7 @@
 
 /* START LABBYMEZZAGE */
 
-body
-{
-    font-family: 'Quintessential', Cursive;
-}
-
-p{
+.messageArea p{
     background-color:white;
     margin-left:4%;
     width:85%;
